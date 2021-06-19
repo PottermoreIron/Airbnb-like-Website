@@ -9,6 +9,7 @@
 
 <style lang="scss" scoped>
 @import "assets/css/base.css";
+
 #app {
   height: 100%;
 }

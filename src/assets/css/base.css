@@ -57,3 +57,11 @@ a {
 .right {
     float: right;
 }
+/* 阿里图标基础属性 */
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }

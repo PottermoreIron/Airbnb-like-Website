@@ -1,7 +1,7 @@
 <template>
   <div class="base">
     <el-container>
-      <el-header><Header /></el-header>
+      <el-header><Header class="header" /></el-header>
       <el-main>Main</el-main>
       <el-footer>Footer</el-footer>
     </el-container>
@@ -21,8 +21,8 @@ export default {
 
 <style scoped>
 .el-container,
-.el-header,
 .el-main,
+.el-header,
 .el-footer {
   display: flex;
   align-items: center;
@@ -32,5 +32,8 @@ export default {
 .base,
 .el-container {
   height: 100%;
+}
+.el-header {
+  height: 529px !important;
 }
 </style>

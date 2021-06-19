@@ -7,15 +7,12 @@
       placeholder="按城市,地址,地标搜索"
       @select="handleSelect"
     >
-      <i
-        class="el-icon-search el-input__icon"
-        slot="prefix"
-        @click="handleIconClick"
-      >
-      </i>
+      <i class="el-icon-search el-input__icon" slot="prefix"> </i>
       <template slot-scope="{ item }">
-        <i class="el-icon-location el-input__icon" slot="prefix"></i>
-        <div class="name">{{ item.site }}</div>
+        <div class="keyWord_wrapper">
+          <i class="el-icon-location el-input__icon" slot="prefix"></i>
+          <div class="name">{{ item.site }}</div>
+        </div>
         <span class="addr">{{ item.address }}</span>
       </template>
     </el-autocomplete>
@@ -74,26 +71,33 @@ export default {
 
 <style lang="scss" scoped>
 .nav_bar_left_container {
-  flex: 1 1 auto;
+  width: 400px;
   display: flex;
   align-items: center;
 }
 .el-autocomplete {
   width: 100%;
-  ::v-deep .el-input__inner {
-    width: 40% !important;
-    height: 100%;
-  }
 }
-
+.el-autocomplete ::v-deep .el-input__inner::placeholder {
+  color: #858585;
+}
+.el-autocomplete ::v-deep .el-input__inner:focus {
+  border-color: darkorange;
+}
 .my-autocomplete {
+  .keyWord_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   li {
     line-height: normal;
     padding: 7px;
-
     .name {
       text-overflow: ellipsis;
       overflow: hidden;
+      color: #494949;
+      font-weight: bold;
     }
     .addr {
       font-size: 12px;
@@ -101,8 +105,13 @@ export default {
     }
 
     .highlighted .addr {
-      color: #ddd;
+      color: #777;
     }
   }
+}
+::v-deep .el-input__inner {
+  color: #0d0d0d;
+  font-weight: bold;
+  border-radius: 20px;
 }
 </style>

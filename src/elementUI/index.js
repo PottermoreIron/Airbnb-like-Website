@@ -15,6 +15,17 @@ import {
   Pagination,
   Switch,
   Autocomplete,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  DatePicker,
+  TimePicker,
+  CheckboxGroup,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  Dialog,
 } from "element-ui";
 
 Vue.use(Button);
@@ -32,3 +43,14 @@ Vue.use(CarouselItem);
 Vue.use(Pagination);
 Vue.use(Switch);
 Vue.use(Autocomplete);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(DatePicker);
+Vue.use(TimePicker);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(Dialog);

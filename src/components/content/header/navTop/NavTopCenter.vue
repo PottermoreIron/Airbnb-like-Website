@@ -1,10 +1,10 @@
 <template>
-  <div class="nav_bar_right_container">nav-bar-right</div>
+  <div class="nav_bar_center_container">nav-bar-center</div>
 </template>
 
 <script>
 export default {
-  name: "NavBarRight",
+  name: "NavBarCenter",
   data() {
     return {};
   },
@@ -12,8 +12,8 @@ export default {
 </script>
 
 <style scoped>
-.nav_bar_right_container {
-  flex: 1 1 auto;
+.nav_bar_center_container {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
