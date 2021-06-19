@@ -1,5 +1,6 @@
 <template>
   <div class="nav_container">
+    <img class="home_bkg" src="../..//static/img/home_bkg.jpg" />
     <nav-top class="nav_top" /><nav-bottom class="nav_bottom" />
   </div>
 </template>
@@ -25,6 +26,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+}
+.home_bkg {
+  width: 100%;
+  height: 529px;
+  position: absolute;
 }
 .nav_top {
   height: 81px !important;
