@@ -25,4 +25,9 @@ export default {
   margin-bottom: 20px;
   margin-left: 20px;
 }
+.house_main {
+  margin-top: 25px;
+  padding-left: 6%;
+  padding-right: 6%;
+}
 </style>

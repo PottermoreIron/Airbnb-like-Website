@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20186094",
+      "name": "保障service-fill",
+      "font_class": "guarantee",
+      "unicode": "e7ba",
+      "unicode_decimal": 59322
+    },
+    {
       "icon_id": "8288959",
       "name": "爱心",
       "font_class": "collected",
