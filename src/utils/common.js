@@ -1,0 +1,9 @@
+export function getImgUrl(url, w, h) {
+  if (!h) {
+    h = w;
+  }
+  // 图片url需要指定宽高
+  url += `?param=${w}y${h}`;
+  console.log(url);
+  return url;
+}

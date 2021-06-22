@@ -2,7 +2,7 @@
   <div class="base">
     <el-container>
       <el-header><Header class="header" /></el-header>
-      <el-main>Main</el-main>
+      <el-main class="main"><Main /></el-main>
       <el-footer>Footer</el-footer>
     </el-container>
   </div>
@@ -10,9 +10,10 @@
 
 <script>
 import Header from "../components/common/Header.vue";
+import Main from "../components/common/Main.vue";
 
 export default {
-  components: { Header },
+  components: { Header, Main },
   data() {
     return {};
   },
@@ -25,15 +26,14 @@ export default {
 .el-header,
 .el-footer {
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
 }
-.base,
-.el-container {
-  height: 100%;
-}
+
 .el-header {
   height: 529px !important;
+  padding: 0px;
+}
+.el-main {
+  height: 5162px !important;
 }
 </style>

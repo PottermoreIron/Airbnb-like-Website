@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "NavBarRight",
+  name: "NavRight",
   props: ["formShow"],
   data() {
     return {};
@@ -31,7 +31,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  color: teal;
+  color: white;
+  z-index: 999;
 }
 .register,
 .login {
@@ -39,6 +40,7 @@ export default {
   align-items: center;
   height: 100%;
   border-bottom: 2px solid transparent !important;
+  font-weight: bold;
 }
 .register:hover,
 .login:hover {

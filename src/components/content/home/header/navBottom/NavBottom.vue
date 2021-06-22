@@ -95,11 +95,12 @@
         </div>
       </div>
     </div>
-    <div class="t">
+    <div class="site_input">
       <div>
         <el-input
           v-model="site"
           placeholder="输入目的地、城市或景点"
+          prefix-icon="el-icon-location"
           @focus="inputFocus"
           @blur="inputBlur"
         ></el-input>
@@ -109,9 +110,9 @@
       <el-date-picker
         v-model="period"
         type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
+        range-separator="-"
+        start-placeholder="入住日期"
+        end-placeholder="退房日期"
         value-format="yyyy-MM-dd"
         @change="change"
         popper-class="custom_date_picker"
@@ -119,7 +120,7 @@
       >
       </el-date-picker>
     </div>
-    <el-button icon="el-icon-search" circle></el-button>
+    <el-button icon="el-icon-search" circle class="search_button"></el-button>
   </div>
 </template>
 
@@ -154,14 +155,16 @@ export default {
       this.showSuggestion = true;
     },
     inputBlur() {
-      this.showSuggestion = false;
+      let _this = this;
+      setTimeout(function () {
+        _this.showSuggestion = false;
+      }, 200);
     },
   },
 };
 </script>
 
-<style lang="scss">
-// 危险!没加scoped!!!
+<style scoped>
 .nav_bottom_container {
   width: 100%;
   display: flex;
@@ -248,8 +251,43 @@ export default {
 .r_table_info:hover {
   cursor: pointer;
 }
-/* 魔改datePicker样式 */
+.site_input {
+  margin-right: 2%;
+  width: 49%;
+}
+::v-deep .el-input__inner {
+  height: 70px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+::v-deep .el-input__inner::placeholder {
+  color: #b0b3b8;
+}
+.search_button {
+  margin-left: 2% !important;
+}
+.el-button {
+  background-color: #2a9d8f;
+  color: white;
+  border: 1px solid #f1faee;
+}
+.el-button:active,
+.el-button:focus {
+  background-color: #2a9d8f;
+  color: white;
+  border-color: #c6e2ff;
+  /* outline: 0; */
+}
+.el-button:hover {
+  color: #2a9d8f;
+  border-color: #2a9d8f;
+  background-color: #ecf5ff;
+}
+</style>
 
+<style lang="scss">
+/* 魔改datePicker样式 */
+// 危险!没加scoped
 .el-date-table td {
   color: rgb(100, 100, 100) !important;
 }
@@ -260,5 +298,21 @@ export default {
 .el-date-table td.start-date span {
   background-color: mediumaquamarine !important;
   color: white !important;
+}
+.el-range-input {
+  color: #00423b !important;
+  font-size: 1.1rem !important;
+}
+.el-range-input::placeholder {
+  color: #b0b3b8 !important;
+  font-size: 1.1rem;
+}
+.el-date-editor .el-range-separator {
+  width: 20% !important;
+}
+.el-range-separator {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 </style>

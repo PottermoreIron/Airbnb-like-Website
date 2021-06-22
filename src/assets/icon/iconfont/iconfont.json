@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8288959",
+      "name": "爱心",
+      "font_class": "collected",
+      "unicode": "e85c",
+      "unicode_decimal": 59484
+    },
+    {
+      "icon_id": "22371470",
+      "name": "爱心",
+      "font_class": "notCollected",
+      "unicode": "e85d",
+      "unicode_decimal": 59485
+    },
+    {
+      "icon_id": "7141585",
+      "name": "star",
+      "font_class": "star",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
       "icon_id": "9186712",
       "name": "微博",
       "font_class": "weibo",

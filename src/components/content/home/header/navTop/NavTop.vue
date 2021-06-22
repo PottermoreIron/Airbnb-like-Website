@@ -1,9 +1,10 @@
 <template>
   <div class="nav_top_container">
-    <nav-top-left /><nav-top-right
+    <nav-top-left class="nav_top_left" v-if="showLeft" /><nav-top-right
       :formShow="formShow"
       @rShow="rShowForm"
       @lShow="lShowForm"
+      :style="{ color: textColor }"
     />
     <el-dialog
       :visible.sync="formShow"
@@ -156,6 +157,10 @@ import NavTopRight from "./NavTopRight.vue";
 
 export default {
   components: { NavTopLeft, NavTopRight },
+  props: {
+    textColor: { type: String, default: "white" },
+    showLeft: { type: Boolean, default: true },
+  },
   name: "NavBar",
   data() {
     //   电话验证规则
@@ -324,6 +329,9 @@ export default {
   display: flex;
   justify-content: space-between !important;
   color: blue;
+}
+.nav_top_left {
+  margin-left: 5%;
 }
 .form {
   position: fixed;

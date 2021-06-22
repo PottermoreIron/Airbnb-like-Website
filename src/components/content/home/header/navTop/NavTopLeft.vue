@@ -113,5 +113,6 @@ export default {
   color: #0d0d0d;
   font-weight: bold;
   border-radius: 20px;
+  font-size: 1rem;
 }
 </style>
