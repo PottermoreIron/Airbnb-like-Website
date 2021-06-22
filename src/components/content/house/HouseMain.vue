@@ -116,21 +116,57 @@
               <div class="separation"></div>
             </div>
             <div class="house_message">
-              <div class="message_first_container">
-                <span class="message_first_bold">入住/退房</span>
-                <span style="margin-left: 150px"
-                  >入住时间:下午2:00后,退房时间:中午12:00</span
-                >
+              <div class="message_container">
+                <span class="message_bold">入住/退房</span>
+                <span>入住时间:下午2:00后,退房时间:中午12:00</span>
               </div>
-              <div class="message_second_container">
-                <span class="message_second_bold">自助入住</span>
-                <span style="margin-left: 150px">通过智能门锁自助入住</span>
+              <div class="message_container">
+                <span class="message_bold">自助入住</span>
+                <span>通过智能门锁自助入住</span>
               </div>
+            </div>
+            <div style="margin-top: 30px; margin-bottom: 0px">
+              <div class="separation"></div>
             </div>
           </div>
           <div class="house_detail_bottom"></div>
         </div>
-        <div id="comment" class="section house_comment">评价</div>
+        <div id="comment" class="section house_comment">
+          <div class="house_comment_title">房客评价</div>
+          <div class="house_scores">
+            <span v-for="item in stars" :key="item.index">
+              <svg
+                class="icon"
+                aria-hidden="true"
+                style="font-size: 1.2rem; margin-right: 5px"
+              >
+                <use xlink:href="#icon-star"></use>
+              </svg>
+            </span>
+            <div class="comment_num">69条评价</div>
+          </div>
+          <div style="margin-top: 30px; margin-bottom: 0px">
+            <div class="separation"></div>
+          </div>
+          <div class="comment_container">
+            <div class="comment_label_container" @click="changeCommentList">
+              <div class="comment_totoal">
+                <button class="total_btn comment_btn_focus" id="total_btn">
+                  全部69
+                </button>
+              </div>
+              <div class="comment_good">
+                <button class="good_btn">好评</button>
+              </div>
+              <div class="comment_bad">
+                <button class="bad_btn">差评</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 20px; margin-bottom: 0px">
+            <div class="separation"></div>
+          </div>
+        </div>
         <div id="date" class="section house_date">可订日期</div>
         <div id="location" class="section house_location">位置</div>
         <div id="tips" class="section house_tips">须知</div>
@@ -142,14 +178,25 @@
 
 <script>
 export default {
+  components: {},
   name: "HouseMain",
   data() {
     return {
       scroll: "",
       descriptionVisible: false,
+      score: "4",
     };
   },
+  created() {
+    let _this = this;
+    _this.stars = new Array(Number(_this.score)).join(",").split(",");
+  },
+  mounted() {
+    //   初始化
+    window.addEventListener("scroll", this.pageScroll);
+  },
   methods: {
+    //   锚点滑动定位
     pageScroll() {
       // 拿到当前的scrollTop,即当前元素离浏览器顶部的高度
       this.scroll =
@@ -207,16 +254,24 @@ export default {
         }
       }
     },
+    // button foucs样式
+    changeCommentList(e) {
+      if (e.target && e.target.nodeName.toLowerCase() == "button") {
+        let $btn = $(e.target);
+        $btn
+          .addClass("comment_btn_focus")
+          .parent()
+          .siblings()
+          .children()
+          .removeClass("comment_btn_focus");
+      }
+    },
   },
   watch: {
     //   监听scroll高度,用于锚点样式随页面滑动而改变
     scroll: function () {
       this.loadScroll();
     },
-  },
-  mounted() {
-    //   初始化
-    window.addEventListener("scroll", this.pageScroll);
   },
 };
 </script>
@@ -392,6 +447,63 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.message_container {
+  margin-top: 30px;
+  color: rgb(72, 72, 72);
+}
+.message_bold {
+  width: 25%;
+  float: left;
+  font-size: 1rem;
+  font-weight: bold;
+}
+/* house comment */
+.comment_container {
+  margin-top: 20px;
+}
+.house_comment {
+  color: rgb(72, 72, 72);
+}
+.house_comment_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.house_scores {
+  display: flex;
+  margin-top: 30px;
+}
+.comment_num {
+  margin-left: 10px;
+}
+.comment_label_container {
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+}
+.total_btn,
+.good_btn,
+.bad_btn {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+.good_btn,
+.total_btn {
+  background: rgb(235, 245, 246);
+  color: rgb(0, 132, 137);
+}
+.bad_btn {
+  background: rgb(246, 246, 246);
+  color: rgb(72, 72, 72);
+}
+.comment_btn_focus {
+  background: rgb(0, 132, 137);
+  color: rgb(255, 255, 255);
+}
 .house_detail,
 .house_comment,
 .house_date,
@@ -401,7 +513,6 @@ export default {
   height: 1000px;
   padding: 3px;
 }
-
 .house_order {
   width: 100px;
   height: 100px;

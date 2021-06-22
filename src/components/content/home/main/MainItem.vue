@@ -36,8 +36,6 @@ export default {
   created() {
     let _this = this;
     _this.stars = new Array(Number(_this.score)).join(",").split(",");
-    console.log("这是");
-    console.log(_this.stars);
   },
   methods: {
     //   测试用的
