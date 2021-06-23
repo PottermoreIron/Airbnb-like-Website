@@ -2,6 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+// 注册百度地图
+import "./baiduMap/index";
+// 注册element ui
 import "./elementUI/index";
 import "./assets/icon/iconfont/iconfont.css";
 // iconfont 彩色图标

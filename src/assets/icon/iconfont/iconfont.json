@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14986",
+      "name": "银行卡",
+      "font_class": "bankCard",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "1166351",
+      "name": "打勾_有圈",
+      "font_class": "confirm",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "20902076",
+      "name": "class消毒液",
+      "font_class": "disinfect",
+      "unicode": "e7fc",
+      "unicode_decimal": 59388
+    },
+    {
+      "icon_id": "4936656",
+      "name": "home-fill",
+      "font_class": "home",
+      "unicode": "e867",
+      "unicode_decimal": 59495
+    },
+    {
       "icon_id": "20186094",
       "name": "保障service-fill",
       "font_class": "guarantee",

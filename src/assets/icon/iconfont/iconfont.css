@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2617877 */
-  src: url('iconfont.woff2?t=1624353286128') format('woff2'),
-       url('iconfont.woff?t=1624353286128') format('woff'),
-       url('iconfont.ttf?t=1624353286128') format('truetype');
+  src: url('iconfont.woff2?t=1624460257959') format('woff2'),
+       url('iconfont.woff?t=1624460257959') format('woff'),
+       url('iconfont.ttf?t=1624460257959') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bankCard:before {
+  content: "\e604";
+}
+
+.icon-confirm:before {
+  content: "\e630";
+}
+
+.icon-disinfect:before {
+  content: "\e7fc";
+}
+
+.icon-home:before {
+  content: "\e867";
 }
 
 .icon-guarantee:before {
