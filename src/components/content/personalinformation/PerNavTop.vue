@@ -1,9 +1,40 @@
 <template>
-  <div class="per_nav_top_bar">
-    <img
-      src="../../../static/test_img/assistant.jpg"
-      class="per_nav_top_bar_headpic"
-    />
+  <div class="per_nav_top_bar_bg">
+    <div class="per_nav_top_bar">
+      <div class="per_nav_select_out">
+        <el-button type="text" class="per_nav_select_in" @click="goToMain"
+          ><b>首页</b></el-button
+        >
+      </div>
+      <el-divider direction="vertical" content-position="center"></el-divider>
+      <div class="per_nav_select_out">
+        <el-button
+          type="text"
+          class="per_nav_select_in"
+          @click="goToCompletedPur"
+          ><b>已完成订单</b></el-button
+        >
+      </div>
+      <el-divider direction="vertical" content-position="center"></el-divider>
+      <div class="per_nav_select_out">
+        <el-button
+          type="text"
+          class="per_nav_select_in"
+          @click="goToUntreatedPur"
+          ><b>未完成订单</b></el-button
+        >
+      </div>
+      <el-divider direction="vertical" content-position="center"></el-divider>
+      <div class="per_nav_select_out">
+        <el-button type="text" class="per_nav_select_in" @click="goToPer"
+          ><b>个人中心</b></el-button
+        >
+      </div>
+      <img
+        src="../../../static/test_img/assistant.jpg"
+        class="per_nav_top_bar_headpic"
+      />
+    </div>
   </div>
 </template>
 
@@ -12,6 +43,22 @@ export default {
   name: "PerNavTop",
   data() {
     return {};
+  },
+  methods: {
+    // 前往个人页面
+    goToPer() {
+      this.$emit("gotoper");
+    },
+    // 前往已完成页面
+    goToCompletedPur() {
+      this.$emit("gotocompletedpur");
+    },
+    // 前往未完成页面
+    goToUntreatedPur() {
+      this.$emit("gotountreatedpur");
+    },
+    // 前往主页面
+    goToMain() {},
   },
 };
 </script>
@@ -24,12 +71,27 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.per_nav_top_bar_bg {
+  background-image: url(../../../assets/NavBack.jpg);
+  background-size: 100%;
+  background-position-y: 275px;
+}
+.per_nav_select_out {
+  display: flex;
+  justify-content: center;
+}
+.per_nav_select_in {
+  padding: 20px;
+  color: rgb(72, 72, 72);
 }
 .per_nav_top_bar_headpic {
-  height: 40px;
-  width: 40px;
-  margin: 40px;
+  height: 35px;
+  width: 35px;
+  margin: 10px;
+  margin-right: 40px;
   border-radius: 100%;
-  border: 1px solid rgb(175, 175, 175);
+  border: 1.75px solid rgb(255, 255, 255);
 }
 </style>

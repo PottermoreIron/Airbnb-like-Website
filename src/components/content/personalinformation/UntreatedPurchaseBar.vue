@@ -1,0 +1,194 @@
+<template>
+  <div class="per_show_bar">
+    <div class="per_show_bar_tital"><b>未完成的订单</b></div>
+    <!----------------------- 表格 ------------------------->
+    <div class="per_show_bar_table">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column prop="date" label="日期" width="180" sortable>
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="用户" width="180">
+          <template slot-scope="scope">
+            <el-popover>
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.name }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hotel" label="酒店" width="180" sortable>
+          <template slot-scope="scope">
+            <el-popover>
+              <div slot="reference">
+                {{ scope.row.hotel }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="price" label="价格" width="180" sortable>
+          <template slot-scope="scope">
+            <el-popover>
+              <div slot="reference">
+                {{ scope.row.price }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="star" label="评分" width="180" sortable>
+          <template slot-scope="scope">
+            <el-popover>
+              <div slot="reference">
+                {{ scope.row.star }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)"
+              type=""
+              icon="el-icon-s-order"
+              >详情</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >退订</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-------------------------- 分页 ---------------------------->
+      <el-pagination
+        background=""
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage1"
+        :page-size="7"
+        layout="total, prev, pager, next"
+        :total="purchaseTotal"
+        style="margin-top: 20px"
+      >
+      </el-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "UntreatedPurchaseBar",
+  data() {
+    return {
+      purchaseTotal: 12,
+      tableData: [
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          hotel: 12,
+          star: 2,
+          price: 200,
+        },
+      ],
+    };
+  },
+  methods: {
+    handleEdit(index, row) {
+      console.log(index, row);
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.per_show_bar {
+  height: 700px;
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.per_show_bar_tital {
+  height: 50px;
+  width: 100%;
+  background-color: white;
+  text-align: left;
+  line-height: 50px;
+  font-size: 1.5rem;
+  color: black;
+  padding-left: 50px;
+  margin-top: 10px;
+}
+.per_show_bar_table {
+  border-radius: 10px;
+  border: 1px solid #dddddd;
+  padding: 30px;
+  margin-top: 30px;
+  width: 1150px;
+  background-color: white;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+</style>

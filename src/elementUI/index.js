@@ -26,6 +26,9 @@ import {
   Radio,
   RadioGroup,
   Dialog,
+  Divider,
+  TableColumn,
+  Table,
 } from "element-ui";
 
 Vue.use(Button);
@@ -54,3 +57,6 @@ Vue.use(CheckboxGroup);
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Dialog);
+Vue.use(Divider);
+Vue.use(TableColumn);
+Vue.use(Table);
