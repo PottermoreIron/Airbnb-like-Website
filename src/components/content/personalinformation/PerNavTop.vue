@@ -1,6 +1,9 @@
 <template>
   <div class="per_nav_top_bar">
-    <img class="per_nav_top_bar_headpic" />
+    <img
+      src="../../../static/test_img/assistant.jpg"
+      class="per_nav_top_bar_headpic"
+    />
   </div>
 </template>
 
