@@ -29,6 +29,8 @@ import {
   Divider,
   TableColumn,
   Table,
+  MessageBox,
+  Rate,
 } from "element-ui";
 
 Vue.use(Button);
@@ -60,3 +62,5 @@ Vue.use(Dialog);
 Vue.use(Divider);
 Vue.use(TableColumn);
 Vue.use(Table);
+Vue.prototype.$msgbox = MessageBox;
+Vue.use(Rate);

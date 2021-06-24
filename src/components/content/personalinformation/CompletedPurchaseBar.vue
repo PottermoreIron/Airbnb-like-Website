@@ -74,14 +74,31 @@
       >
       </el-pagination>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="40%"
+      center
+    >
+      <ShowPurInfor />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ShowPurInfor from "./showcase/ShowPurInfor.vue";
 export default {
   name: "CompletedPurchaseBar",
+  components: { ShowPurInfor },
   data() {
     return {
+      centerDialogVisible: true,
       purchaseTotal: 12,
       tableData: [
         {
@@ -137,12 +154,6 @@ export default {
     };
   },
   methods: {
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },

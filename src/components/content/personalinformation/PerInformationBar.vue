@@ -1,7 +1,11 @@
 <template>
   <div class="per_show_bar">
-    <InformationCard ref="InforCard" />
-    <ChangeMes v-if="changeBar" />
+    <InformationCard ref="inforCard" @changmes="changMes" />
+    <ChangeMes
+      ref="changeMes"
+      @exitchangebar="exitChangeBar"
+      v-if="changeBar"
+    />
   </div>
 </template>
 
@@ -13,11 +17,16 @@ export default {
   components: { InformationCard, ChangeMes },
   data() {
     return {
-      changeBar: true,
+      changeBar: false,
     };
   },
   methods: {
-    submitInformation() {},
+    changMes() {
+      this.changeBar = true;
+    },
+    exitChangeBar() {
+      this.changeBar = false;
+    },
   },
 };
 </script>

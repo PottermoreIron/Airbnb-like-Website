@@ -19,16 +19,32 @@
       <el-divider class="splitline"></el-divider>
       <div class="information_bar">
         当前密码:<br />
-        <input type="password" v-model="corPwd" class="text_bar" />
+        <el-input
+          v-model="corPwd"
+          show-password
+          prefix-icon="el-icon-key"
+          class="text_bar"
+        ></el-input>
       </div>
       <div class="information_bar_half_out">
         <div class="information_bar_half">
           修改密码:<br />
-          <input type="password" v-model="changePwd1" class="text_bar" />
+          <el-input
+            placeholder="不修改密码请勿填写"
+            v-model="changePwd1"
+            type="password"
+            prefix-icon="el-icon-key"
+            class="text_bar"
+          ></el-input>
         </div>
         <div class="information_bar_half">
           确认密码:<br />
-          <input type="password" v-model="changePwd2" class="text_bar" />
+          <el-input
+            v-model="changePwd2"
+            type="password"
+            prefix-icon="el-icon-key"
+            class="text_bar"
+          ></el-input>
         </div>
       </div>
       <div class="submit_button_bar">
@@ -37,7 +53,7 @@
           type="danger"
           icon="el-icon-close"
           round
-          @click="submitInformation"
+          @click="cansel"
         >
         </el-button>
         <div style="width: 20px"></div>
@@ -46,7 +62,7 @@
           type="success"
           icon="el-icon-check"
           round
-          @click="submitInformation"
+          @click="open"
         ></el-button>
       </div>
     </div>
@@ -64,6 +80,28 @@ export default {
       changePwd1: "",
       changePwd2: "",
     };
+  },
+  methods: {
+    cansel() {
+      this.$emit("exitchangebar");
+    },
+    open() {
+      console.log("jaaj");
+      this.$msgbox
+        .confirm("是否确定修改信息", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "修改成功!",
+          });
+          this.$emit("exitchangebar");
+        })
+        .catch(() => {});
+    },
   },
 };
 </script>
@@ -123,7 +161,6 @@ export default {
   height: 30px;
   font-size: 1.1rem;
   border-radius: 4px;
-  border: 2px solid rgb(176 176 176);
   margin-top: 10px;
 }
 .submit_button_bar {
