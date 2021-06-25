@@ -3,11 +3,7 @@
     <div class="per_show_bar_tital"><b>已完成的订单</b></div>
     <!----------------------- 表格 ------------------------->
     <div class="per_show_bar_table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        :default-sort="{ prop: 'date', order: 'descending' }"
-      >
+      <el-table :data="tableData" style="width: 100%">
         <el-table-column prop="date" label="日期" width="180" sortable>
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
@@ -75,14 +71,14 @@
       </el-pagination>
     </div>
     <el-dialog
-      title="提示"
+      title="订单详情"
       :visible.sync="centerDialogVisible"
-      width="40%"
+      width="550px"
       center
+      @opened="opened"
     >
-      <ShowPurInfor />
+      <ShowPurInfor ref="showPurInfor" />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="centerDialogVisible = false"
           >确 定</el-button
         >
@@ -98,7 +94,7 @@ export default {
   components: { ShowPurInfor },
   data() {
     return {
-      centerDialogVisible: true,
+      centerDialogVisible: false,
       purchaseTotal: 12,
       tableData: [
         {
@@ -107,6 +103,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 4,
         },
         {
           date: "2016-05-02",
@@ -114,6 +111,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 4,
         },
         {
           date: "2016-05-02",
@@ -121,6 +119,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 3,
         },
         {
           date: "2016-05-02",
@@ -128,6 +127,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 3,
         },
         {
           date: "2016-05-02",
@@ -135,6 +135,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 3,
         },
         {
           date: "2016-05-04",
@@ -142,6 +143,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 3,
         },
         {
           date: "2016-05-03",
@@ -149,11 +151,22 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 3,
         },
       ],
+      x: this.row,
     };
   },
   methods: {
+    // 对话框回调opened
+    opened() {
+      this.$refs.showPurInfor.open(this.x);
+    },
+
+    handleEdit(index, row) {
+      this.centerDialogVisible = true;
+      this.x = row;
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },

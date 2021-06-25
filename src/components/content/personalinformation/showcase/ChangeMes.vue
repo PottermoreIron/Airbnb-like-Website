@@ -6,15 +6,15 @@
       <el-divider class="splitline"></el-divider>
       <div class="information_bar">
         用户名:<br />
-        <input type="text" v-model="changeName" class="text_bar" />
+        <el-input v-model="changeName" class="text_bar"> </el-input>
       </div>
       <div class="information_bar">
         手机号码:<br />
-        <input type="text" v-model="changePhoneNumber" class="text_bar" />
+        <el-input v-model="changePhoneNumber" class="text_bar"> </el-input>
       </div>
       <div class="information_bar">
         身份证号码:<br />
-        <input type="text" v-model="changeIdCardNumber" class="text_bar" />
+        <el-input v-model="changeIdCardNumber" class="text_bar"> </el-input>
       </div>
       <el-divider class="splitline"></el-divider>
       <div class="information_bar">
@@ -86,7 +86,6 @@ export default {
       this.$emit("exitchangebar");
     },
     open() {
-      console.log("jaaj");
       this.$msgbox
         .confirm("是否确定修改信息", "提示", {
           confirmButtonText: "确定",

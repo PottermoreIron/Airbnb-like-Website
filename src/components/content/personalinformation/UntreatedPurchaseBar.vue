@@ -80,15 +80,34 @@
         style="margin-top: 20px"
       >
       </el-pagination>
+
+      <!-- 对话框 -->
+      <el-dialog
+        title="订单详情"
+        :visible.sync="centerDialogVisible"
+        width="550px"
+        center
+        @opened="opened"
+      >
+        <ShowPurInfor ref="showPurInfor" />
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="centerDialogVisible = false"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import ShowPurInfor from "./showcase/ShowPurInfor.vue";
 export default {
   name: "UntreatedPurchaseBar",
+  components: { ShowPurInfor },
   data() {
     return {
+      centerDialogVisible: false,
       purchaseTotal: 12,
       tableData: [
         {
@@ -97,6 +116,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-02",
@@ -104,6 +124,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-02",
@@ -111,6 +132,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-02",
@@ -118,6 +140,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-02",
@@ -125,6 +148,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-04",
@@ -132,6 +156,7 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
         {
           date: "2016-05-03",
@@ -139,16 +164,38 @@ export default {
           hotel: 12,
           star: 2,
           price: 200,
+          ep: 1,
         },
       ],
+      x: this.row,
     };
   },
   methods: {
     handleEdit(index, row) {
-      console.log(index, row);
+      this.centerDialogVisible = true;
+      this.x = row;
+    },
+    opened() {
+      this.$refs.showPurInfor.open(this.x);
+    },
+    //弹出提示框
+    open(id) {
+      this.$msgbox
+        .confirm("是否确定取消订单", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "取消成功!",
+          }).catch(() => {});
+          console.log(id);
+        });
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      this.open(row.name);
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
