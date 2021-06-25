@@ -2,7 +2,7 @@
   <div class="comment_container">
     <div class="comment_top_container">
       <div class="comment_avatar_img">
-        <img src="../../../static/test_img/avatar.jpg" />
+        <img src="test_img/avatar.jpg" />
       </div>
       <div class="comment_user_info">
         <div class="user_name">{{ userName }}</div>

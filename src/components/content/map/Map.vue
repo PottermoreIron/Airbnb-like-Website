@@ -19,7 +19,12 @@
       ></bm-marker>
     </baidu-map>
     <button class="zoom_in_btn" @click="showPopover">放大地图</button>
-    <el-dialog :visible.sync="popoverMapVisible"><popover-map /></el-dialog>
+    <el-dialog :visible.sync="popoverMapVisible"
+      ><span
+        style="font-size: 1.2rem; font-weight: bold; color: rgb(72, 72, 72)"
+        >畅游吧,旅人！</span
+      ><popover-map style="margin-top: 20px"
+    /></el-dialog>
     <div class="more_loc_info_container">
       <button class="more_loc_info_btn" @click="showPopover">
         查看更多周边信息

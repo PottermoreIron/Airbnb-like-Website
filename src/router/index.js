@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 // import Home from "@/views/Home.vue";
-import House from "@/views/House.vue";
+// import House from "@/views/House.vue";
+import Search from "@/views/Search.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -15,14 +16,20 @@ const routes = [
   //     name: "House",
   //     component: House,
   //   },
+  //   {
+  //     path: "",
+  //     redirect: "/house",
+  //   },
+  //   {
+  //     path: "/house",
+  //     name: "House",
+  //     component: House,
+  //   },
+  { path: "", redirect: "/search" },
   {
-    path: "",
-    redirect: "/house",
-  },
-  {
-    path: "/house",
-    name: "House",
-    component: House,
+    path: "/search",
+    name: "Search",
+    component: Search,
   },
 ];
 

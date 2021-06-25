@@ -27,6 +27,7 @@ import {
   RadioGroup,
   Dialog,
   Calendar,
+  InputNumber,
 } from "element-ui";
 
 Vue.use(Button);
@@ -56,3 +57,4 @@ Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Dialog);
 Vue.use(Calendar);
+Vue.use(InputNumber);

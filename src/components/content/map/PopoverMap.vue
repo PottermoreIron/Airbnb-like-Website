@@ -9,7 +9,6 @@
       @moveend="syncCenterAndZoom"
       @zoomend="syncCenterAndZoom"
     >
-      >
       <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
       <bm-marker
         :position="{ lng: 116.404, lat: 39.915 }"
@@ -65,7 +64,7 @@ export default {
   position: relative;
 }
 .popover_map {
-  width: 57%;
+  width: 100%;
   height: 500px;
 }
 .check_postion {

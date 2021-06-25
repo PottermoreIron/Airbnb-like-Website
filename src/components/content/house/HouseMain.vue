@@ -49,7 +49,7 @@
           <div class="house_detail_center">
             <div class="center_top_container">
               <div class="center_top_img_container">
-                <img src="../../../static/test_img/assistant.jpg" />
+                <img src="test_img/assistant.jpg" />
               </div>
               <span
                 style="
@@ -187,7 +187,35 @@
         <div id="date" class="section house_date">
           <div class="house_date_title">可订日期</div>
           <div class="house_date_tips">至少住一晚</div>
-          <el-calendar v-model="value"> </el-calendar>
+          <div class="datepicker-trigger">
+            <button
+              type="text"
+              placeholder="Select dates"
+              id="datepicker-trigger"
+              class="date_btn"
+            >
+              <span>{{ formatDates }}</span>
+            </button>
+            <AirbnbStyleDatepicker
+              class="airbnb_date"
+              :trigger-element-id="'datepicker-trigger'"
+              :mode="'range'"
+              :inline="true"
+              :minDate="today"
+              :date-one="dateOne"
+              :date-two="dateTwo"
+              @date-one-selected="
+                (val) => {
+                  dateOne = val;
+                }
+              "
+              @date-two-selected="
+                (val) => {
+                  dateTwo = val;
+                }
+              "
+            />
+          </div>
         </div>
         <div id="location" class="section house_location">
           <div class="house_location_title">房源位置</div>
@@ -266,14 +294,6 @@
                       入住日期下午2点前取消，扣除首晚房费后，退还剩余房费和全部清洁费
                     </div>
                   </div>
-                  <div style="margin-bottom: 14px">
-                    <button class="cancel_policy_btn" @click="showCancelPolicy">
-                      查看完整详情
-                    </button>
-                  </div>
-                  <el-dialog :visible.sync="cancelPolicyVisible"
-                    >test</el-dialog
-                  >
                 </div>
               </div>
             </div>
@@ -376,8 +396,11 @@
           </div>
         </div>
       </div>
+      <div class="space_occupy"></div>
     </div>
-    <div class="house_order"></div>
+    <div class="house_order_container">
+      <Order :date="orderDate" @changeDate="fatherChangeDate" />
+    </div>
   </div>
 </template>
 
@@ -385,11 +408,12 @@
 import Pagination from "../../common/Pagination.vue";
 import Comment from "./Comment.vue";
 import Map from "../map/Map.vue";
+import Order from "../house/main/Order.vue";
 import { scrollInto } from "@/utils/dom.js";
 // import { getPageOffset } from "@/utils/common.js";
 const PAGE_SIZE = 5;
 export default {
-  components: { Comment, Pagination, Map },
+  components: { Comment, Pagination, Map, Order },
   name: "HouseMain",
   data() {
     return {
@@ -442,7 +466,10 @@ export default {
           comment: "一般般,能住,我朋友也这么觉得",
         },
       ],
+      dateOne: "",
+      dateTwo: "",
       value: "",
+      today: "",
       housingCodeVisible: false,
       cancelPolicyVisible: false,
       safeIntroVisible: false,
@@ -455,6 +482,11 @@ export default {
     _this.initData();
     let picker = document.getElementById("date_picker");
     console.log(picker);
+    let day = new Date();
+    day.setTime(day.getTime());
+    _this.today =
+      day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+    console.log(_this.today);
   },
   mounted() {
     //   初始化
@@ -519,12 +551,7 @@ export default {
         }
       }
     },
-    watch: {
-      //   监听scroll高度,用于锚点样式随页面滑动而改变
-      scroll: function () {
-        this.loadScroll();
-      },
-    },
+
     // button foucs样式
     changeCommentList(e) {
       if (e.target && e.target.nodeName.toLowerCase() == "button") {
@@ -568,6 +595,37 @@ export default {
       let _this = this;
       _this.safeIntroVisible = true;
     },
+    fatherChangeDate(dateArr) {
+      let _this = this;
+      _this.dateOne = dateArr[0];
+      _this.dateTwo = dateArr[1];
+    },
+  },
+  watch: {
+    //   监听scroll高度,用于锚点样式随页面滑动而改变
+    scroll: function () {
+      this.loadScroll();
+    },
+  },
+  computed: {
+    formatDates: function () {
+      if (this.dateOne != "" && this.dateTwo != "") {
+        let formatDateOne = this.dateOne.replace(/-/g, "/").substr(5);
+        let formatDateTwo = this.dateTwo.replace(/-/g, "/").substr(5);
+        return formatDateOne + " - " + formatDateTwo;
+      } else {
+        return "选择日期";
+      }
+    },
+    orderDate: function () {
+      let dateArr = new Array();
+      if (this.dateOne != "" && this.dateTwo != "") {
+        dateArr.push(this.dateOne);
+        dateArr.push(this.dateTwo);
+        console.log(dateArr);
+      }
+      return dateArr;
+    },
   },
 };
 </script>
@@ -577,7 +635,7 @@ export default {
 .house_main_container {
   display: flex;
   justify-content: space-between;
-  height: 7000px;
+  /* height: 7000px; */
   color: rgb(72, 72, 72);
 }
 .house_info_container {
@@ -799,6 +857,22 @@ export default {
 .house_date_tips {
   margin-top: 40px;
 }
+.date_btn {
+  width: 200px;
+  height: 31px;
+  background-color: #008489;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.datepicker-trigger {
+  margin-top: 20px;
+}
+.airbnb_date {
+  margin-top: 20px;
+}
 /* house location */
 .house_location_title {
   font-size: 1.5rem;
@@ -923,15 +997,17 @@ export default {
 .house_date,
 .house_location,
 .house_tips {
-  margin-top: 10px;
-  height: 1500px;
+  margin-top: 30px;
+  /* height: 1500px; */
   padding: 3px;
 }
-.house_order {
-  width: 100px;
-  height: 100px;
-  background-color: black;
+.space_occupy {
+  height: 200px;
+}
+.house_order_container {
+  width: 376px;
+  height: 448px;
   position: sticky;
-  top: 50%;
+  top: 100px;
 }
 </style>

@@ -6,11 +6,25 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7463942",
+      "name": "问号",
+      "font_class": "help",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
       "icon_id": "14986",
       "name": "银行卡",
       "font_class": "bankCard",
       "unicode": "e604",
       "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "22438841",
+      "name": "打勾_有圈",
+      "font_class": "rights",
+      "unicode": "e868",
+      "unicode_decimal": 59496
     },
     {
       "icon_id": "1166351",
