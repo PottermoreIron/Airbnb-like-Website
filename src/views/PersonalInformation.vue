@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       userName: "",
-      displayBar: 3,
+      displayBar: 1,
     };
   },
   methods: {

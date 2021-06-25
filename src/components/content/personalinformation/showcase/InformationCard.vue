@@ -3,15 +3,15 @@
   <div class="per_left_bar_out">
     <div class="per_left_bar_in">
       <img src="@/static/test_img/assistant.jpg" class="head_pic" />
-      <b class="user_name">{{ userName }}</b>
+      <b class="user_name">{{ user.userName }}</b>
       <el-divider class="divider"></el-divider>
       <div class="information_show">
-        <span class="information_zoon">ID : {{ userId }}</span>
+        <span class="information_zoon">ID : {{ user.id }}</span>
         <span class="information_zoon"
-          ><i class="el-icon-phone" /> : {{ userPhone }}</span
+          ><i class="el-icon-phone" /> : {{ user.userPhone }}</span
         >
         <span class="information_zoon"
-          ><i class="el-icon-user" /> : {{ userIdCard }}</span
+          ><i class="el-icon-user" /> : {{ user.userIdc }}</span
         >
       </div>
       <el-divider class="divider"></el-divider>
@@ -32,15 +32,35 @@ export default {
   name: "InformationCard",
   data() {
     return {
-      userName: "Cherry",
-      userId: 1234,
-      userPhone: 16674569555,
-      userIdCard: 630121200005053613,
+      //用户信息
+      user: [],
     };
+  },
+  created() {
+    this.$axios
+      .get("/userManager/getUserById", {
+        params: {
+          id: this.$parent.id,
+        },
+      })
+      .then((res) => {
+        this.user = res.data.data;
+      });
   },
   methods: {
     changeMes() {
       this.$emit("changmes");
+    },
+    update() {
+      this.$axios
+        .get("/userManager/getUserById", {
+          params: {
+            id: this.$parent.id,
+          },
+        })
+        .then((res) => {
+          this.user = res.data.data;
+        });
     },
   },
 };

@@ -73,6 +73,7 @@ export default {
   name: "ChangeMes",
   data() {
     return {
+      user: [],
       changeName: "Cherry",
       changePhoneNumber: "111111",
       changeIdCardNumber: "123145",
@@ -80,6 +81,20 @@ export default {
       changePwd1: "",
       changePwd2: "",
     };
+  },
+  created() {
+    this.$axios
+      .get("/userManager/getUserById", {
+        params: {
+          id: this.$parent.id,
+        },
+      })
+      .then((res) => {
+        this.user = res.data.data;
+        this.changeName = this.user.userName;
+        this.changePhoneNumber = this.user.userPhone;
+        this.changeIdCardNumber = this.user.userIdc;
+      });
   },
   methods: {
     cansel() {
@@ -93,9 +108,17 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "修改成功!",
+          this.$axios.get("/userManager/userUpdateByIdCard", {
+            params: { id: this.$parent.id, idCard: this.changeIdCardNumber },
+          });
+          this.$axios.get("/userManager/userUpdateByName", {
+            params: { id: this.$parent.id, userName: this.changeName },
+          });
+          this.$axios.get("/userManager/userUpdateByPhone", {
+            params: {
+              id: this.$parent.id,
+              userPhone: this.changePhoneNumber,
+            },
           });
           this.$emit("exitchangebar");
         })

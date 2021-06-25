@@ -17,6 +17,7 @@ export default {
   components: { InformationCard, ChangeMes },
   data() {
     return {
+      id: 2,
       changeBar: false,
     };
   },
@@ -26,6 +27,7 @@ export default {
     },
     exitChangeBar() {
       this.changeBar = false;
+      this.$refs.inforCard.update();
     },
   },
 };
