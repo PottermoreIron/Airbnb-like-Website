@@ -1,7 +1,7 @@
 <template>
   <div class="item_container" @click="goHouseDetail">
     <div class="room_img">
-      <img src="../../../../static/test_img/room.jpg" alt="房间图片" />
+      <img src="test_img/room.jpg" alt="房间图片" />
     </div>
     <div class="info">
       <div class="info_top">
