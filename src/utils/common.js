@@ -7,3 +7,6 @@ export function getImgUrl(url, w, h) {
   console.log(url);
   return url;
 }
+export function getPageOffset(pageIndex, pageSize) {
+  return (pageIndex - 1) * pageSize;
+}

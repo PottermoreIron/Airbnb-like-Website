@@ -1,27 +1,27 @@
 <template>
   <div class="house_img_container">
     <div class="main_img_container">
-      <img class="zoom_img" src="../../../static/test_img/house/zoom.jpeg" />
-      <img class="main_img" src="../../../static/test_img/house/house1.jpeg" />
+      <img class="zoom_img" src="test_img/house/zoom.jpeg" />
+      <img class="main_img" src="test_img/house/house1.jpeg" />
     </div>
     <div class="sub_img_container">
       <div class="sub_img_item">
-        <img class="zoom_img" src="../../../static/test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="../../../static/test_img/house/house2.jpeg" />
+        <img class="zoom_img" src="test_img/house/zoom.jpeg" />
+        <img class="sub_img" src="test_img/house/house2.jpeg" />
       </div>
       <div class="sub_img_item">
-        <img class="zoom_img" src="../../../static/test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="../../../static/test_img/house/house3.jpeg" />
+        <img class="zoom_img" src="test_img/house/zoom.jpeg" />
+        <img class="sub_img" src="test_img/house/house3.jpeg" />
       </div>
     </div>
     <div class="sub_img_container">
       <div class="sub_img_item">
-        <img class="zoom_img" src="../../../static/test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="../../../static/test_img/house/house4.jpeg" />
+        <img class="zoom_img" src="test_img/house/zoom.jpeg" />
+        <img class="sub_img" src="test_img/house/house4.jpeg" />
       </div>
       <div class="sub_img_item">
-        <img class="zoom_img" src="../../../static/test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="../../../static/test_img/house/house5.jpeg" />
+        <img class="zoom_img" src="test_img/house/zoom.jpeg" />
+        <img class="sub_img" src="test_img/house/house5.jpeg" />
       </div>
     </div>
     <div class="collection_btn" @click="collectHouse">

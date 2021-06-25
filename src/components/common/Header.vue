@@ -4,7 +4,7 @@
       <span class="slogan_top">暑期酒店，低至5折起</span
       ><span class="slogan_bottom">浪迹夏天</span>
     </div>
-    <img class="home_bkg" src="../../static/test_img/home_bkg.jpg" />
+    <img class="home_bkg" src="test_img/home_bkg.jpg" />
     <nav-top class="nav_top" /><nav-bottom class="nav_bottom" />
   </div>
 </template>

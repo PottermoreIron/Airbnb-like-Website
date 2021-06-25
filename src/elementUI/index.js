@@ -31,6 +31,8 @@ import {
   Table,
   MessageBox,
   Rate,
+  Calendar,
+  InputNumber,
 } from "element-ui";
 
 Vue.use(Button);
@@ -64,3 +66,5 @@ Vue.use(TableColumn);
 Vue.use(Table);
 Vue.prototype.$msgbox = MessageBox;
 Vue.use(Rate);
+Vue.use(Calendar);
+Vue.use(InputNumber);

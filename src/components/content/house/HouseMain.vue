@@ -49,7 +49,7 @@
           <div class="house_detail_center">
             <div class="center_top_container">
               <div class="center_top_img_container">
-                <img src="../../../static/test_img/assistant.jpg" />
+                <img src="test_img/assistant.jpg" />
               </div>
               <span
                 style="
@@ -148,7 +148,7 @@
           <div style="margin-top: 30px; margin-bottom: 0px">
             <div class="separation"></div>
           </div>
-          <div class="comment_container">
+          <div class="comment_container" ref="comments">
             <div class="comment_label_container" @click="changeCommentList">
               <div class="comment_totoal">
                 <button class="total_btn comment_btn_focus" id="total_btn">
@@ -166,30 +166,327 @@
           <div style="margin-top: 20px; margin-bottom: 0px">
             <div class="separation"></div>
           </div>
+          <div v-for="item in comments" :key="item.id">
+            <comment
+              :userName="item.name"
+              :commentDate="item.time"
+              :comment="item.comment"
+            />
+            <div style="margin-top: 20px; margin-bottom: 0px">
+              <div class="separation"></div>
+            </div>
+          </div>
+          <pagination
+            :current-page.sync="currentPage"
+            :page-size="PAGE_SIZE"
+            :total="total"
+            @current-change="onPageChange"
+            class="pagination"
+          />
         </div>
-        <div id="date" class="section house_date">可订日期</div>
-        <div id="location" class="section house_location">位置</div>
-        <div id="tips" class="section house_tips">须知</div>
+        <div id="date" class="section house_date">
+          <div class="house_date_title">可订日期</div>
+          <div class="house_date_tips">至少住一晚</div>
+          <div class="datepicker-trigger">
+            <button
+              type="text"
+              placeholder="Select dates"
+              id="datepicker-trigger"
+              class="date_btn"
+            >
+              <span>{{ formatDates }}</span>
+            </button>
+            <AirbnbStyleDatepicker
+              class="airbnb_date"
+              :trigger-element-id="'datepicker-trigger'"
+              :mode="'range'"
+              :inline="true"
+              :minDate="today"
+              :date-one="dateOne"
+              :date-two="dateTwo"
+              @date-one-selected="
+                (val) => {
+                  dateOne = val;
+                }
+              "
+              @date-two-selected="
+                (val) => {
+                  dateTwo = val;
+                }
+              "
+            />
+          </div>
+        </div>
+        <div id="location" class="section house_location">
+          <div class="house_location_title">房源位置</div>
+          <div class="location">
+            <div class="location_title">
+              中国, 北京市, 绿地诺亚方舟悦公馆南区
+            </div>
+            <div class="location_desc">
+              生活配套： <br />-
+              小区内有超市、咖啡厅、健身房，卓秀北街和良乡东路两侧有各式餐馆。<br />
+              - 首创奥特莱斯：4.5公里，驾车或乘坐公交约10分钟可达。
+            </div>
+          </div>
+          <div class="transport">
+            <div class="transport_title">出行信息</div>
+            <div class="transport_desc">
+              公共交通：
+              小区东门紧邻地铁房山线（良乡大学城北站），距房源仅100米，地铁站旁有公交车站（房12路、房1路、房46路）。距离北京中心地带约1-1.5小时。
+            </div>
+          </div>
+          <div class="map_container">
+            <Map />
+          </div>
+        </div>
+        <div id="tips" class="section house_tips">
+          <div class="house_tips_title">预订须知</div>
+          <div class="tips_container">
+            <div style="margin-top: 24px">
+              <div class="housing_code_container">
+                <div class="housing_code_title">房屋守则</div>
+                <div class="housing_code_desc_container">
+                  <div style="margin-bottom: 14px">
+                    <div class="housing_code_desc">适合儿童(2-12岁)</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="housing_code_desc">不允许举办派对和活动</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="housing_code_desc">适合婴幼儿(2岁以下)</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="housing_code_desc">不允许携带宠物</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="housing_code_desc">禁止吸烟</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <button class="housing_code_btn" @click="showHousingCode">
+                      房屋守则
+                    </button>
+                  </div>
+                  <el-dialog :visible.sync="housingCodeVisible"
+                    ><div class="housing_pop_title">房屋守则</div>
+                    <div class="user_rights_container">
+                      <div class="user_rights_title">房客使用权限</div>
+                      <div class="user_rights">
+                        客人可以使用房源内的所有设施。
+                      </div>
+                    </div>
+                    <div class="attention_matters_container">
+                      <div class="attention_matters_title">其他注意事项</div>
+                      <div class="attention_matters">
+                        为节约能源，不在客房时请关闭电视、空调等设施。<br />退房时，我们会检查房间物品，如有损坏，请您照价赔偿。
+                      </div>
+                    </div></el-dialog
+                  >
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 24px">
+              <div class="cancel_policy_container">
+                <div class="cancel_policy_title">取消政策</div>
+                <div class="cancel_policy_desc_container">
+                  <div style="margin-bottom: 14px">
+                    <div class="cancel_policy_desc">
+                      入住日期下午2点前取消，扣除首晚房费后，退还剩余房费和全部清洁费
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 24px">
+              <div class="safe_intro_container">
+                <div class="safe_intro_title">安全须知</div>
+                <div class="safe_intro_desc_container">
+                  <div style="margin-bottom: 14px">
+                    <div class="safe_intro_desc">
+                      在新冠肺炎疫情期间，我们要求所有酒店和住客查看并遵守我们的社交距离准则和其他新冠肺炎疫情相关准则。
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="safe_intro_desc">已配备一氧化碳报警器</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <div class="safe_intro_desc">已配备烟雾报警器</div>
+                  </div>
+                  <div style="margin-bottom: 14px">
+                    <button class="safe_intro_btn" @click="showSafeIntro">
+                      查看更多
+                    </button>
+                  </div>
+                  <el-dialog :visible.sync="safeIntroVisible"
+                    ><div class="safe_pop_title">安全须知</div>
+                    <div class="safe_pop_intro_container">
+                      <div class="safe_intro">
+                        <div style="width: 10%; float: left">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-disinfect"></use>
+                          </svg>
+                        </div>
+                        <div style="width: 90%; float: left">
+                          在新冠肺炎疫情期间，我们要求所有房东和房客查看并遵守爱彼迎的社交距离准则和其他新冠肺炎疫情相关准则。
+                        </div>
+                      </div>
+                      <div class="safe_intro">
+                        <div style="width: 10%; float: left">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-confirm"></use>
+                          </svg>
+                        </div>
+                        <div style="width: 90%; float: left">
+                          已配备一氧化碳报警器
+                        </div>
+                      </div>
+                      <div class="safe_intro"></div>
+                      <div style="width: 10%; float: left">
+                        <svg class="icon" aria-hidden="true">
+                          <use xlink:href="#icon-confirm"></use>
+                        </svg>
+                      </div>
+                      <div style="width: 90%; float: left">
+                        已配备烟雾报警器
+                      </div>
+                    </div>
+                    <div class="other_safe_intro_container">
+                      <div class="other_safe_intro_title">
+                        您还必须确认以下情况
+                      </div>
+                      <div class="other_safe_intro">
+                        <div style="width: 10%; float: left">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-bankCard"></use>
+                          </svg>
+                        </div>
+                        <div style="width: 90%; float: left">
+                          押金 - 如果损坏房源，您可能会被收取高达￥300的罚金
+                        </div>
+                      </div>
+                    </div></el-dialog
+                  >
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 24px">
+              <div class="secure_booking_container">
+                <div class="secure_booking_title">安全预订</div>
+                <div class="secure_booking_desc_container">
+                  <div style="margin-bottom: 14px">
+                    <div class="secure_booking_desc">
+                      为了保护您的账号隐私及付款安全，请勿妄信第三方预订代理提供的折扣或礼金券，也不要在其他网站或App汇款或沟通。
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 24px">
+              <div class="invoice_notes_container">
+                <div class="invoice_notes_title">发票须知</div>
+                <div class="invoice_notes_desc_container">
+                  <div style="margin-bottom: 14px">
+                    <div class="invoice_notes_desc">
+                      我们可为此房源的订单提供发票。开具发票，请在下单前选择「需要发票」并填写发票信息，退房后平台将自动为您开具电子普通发票，或纸质专用发票。
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="space_occupy"></div>
     </div>
-    <div class="house_order"></div>
+    <div class="house_order_container">
+      <Order :date="orderDate" @changeDate="fatherChangeDate" />
+    </div>
   </div>
 </template>
 
 <script>
+import Pagination from "../../common/Pagination.vue";
+import Comment from "./Comment.vue";
+import Map from "../map/Map.vue";
+import Order from "../house/main/Order.vue";
+import { scrollInto } from "@/utils/dom.js";
+// import { getPageOffset } from "@/utils/common.js";
+const PAGE_SIZE = 5;
 export default {
-  components: {},
+  components: { Comment, Pagination, Map, Order },
   name: "HouseMain",
   data() {
     return {
       scroll: "",
       descriptionVisible: false,
       score: "4",
+      currentPage: 0,
+      total: 50,
+      comments: [
+        {
+          id: 1,
+          name: "POT",
+          time: "2021年6月",
+          comment: "房间不错,愉快的旅程,下次还去这家",
+        },
+        {
+          id: 2,
+          name: "SOB",
+          time: "2020年7月",
+          comment: "卫生不行,刚去的时候还有烟味",
+        },
+        {
+          id: 3,
+          name: "QQQ",
+          time: "2029年1月",
+          comment: "还行吧,对于这个价格来说",
+        },
+        {
+          id: 4,
+          name: "PPP",
+          time: "2022年2月",
+          comment: "太一般了,房东态度也很不好",
+        },
+        {
+          id: 5,
+          name: "AAA",
+          time: "2023年5月",
+          comment: "房东态度很好啊,你是不是认错房东了",
+        },
+        {
+          id: 6,
+          name: "SLP",
+          time: "2021年3月",
+          comment: "我觉得可以,我女朋友觉得一般",
+        },
+        {
+          id: 7,
+          name: "OLI",
+          time: "2020年9月",
+          comment: "一般般,能住,我朋友也这么觉得",
+        },
+      ],
+      dateOne: "",
+      dateTwo: "",
+      value: "",
+      today: "",
+      housingCodeVisible: false,
+      cancelPolicyVisible: false,
+      safeIntroVisible: false,
     };
   },
-  created() {
+  async created() {
     let _this = this;
     _this.stars = new Array(Number(_this.score)).join(",").split(",");
+    _this.PAGE_SIZE = PAGE_SIZE;
+    _this.initData();
+    let picker = document.getElementById("date_picker");
+    console.log(picker);
+    let day = new Date();
+    day.setTime(day.getTime());
+    _this.today =
+      day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+    console.log(_this.today);
   },
   mounted() {
     //   初始化
@@ -254,6 +551,7 @@ export default {
         }
       }
     },
+
     // button foucs样式
     changeCommentList(e) {
       if (e.target && e.target.nodeName.toLowerCase() == "button") {
@@ -266,11 +564,67 @@ export default {
           .removeClass("comment_btn_focus");
       }
     },
+    // 数据初始化
+    async initData() {},
+    async getComments() {
+      //   const { comments, total } = await getComments({
+      //     limit: PAGE_SIZE,
+      //     // getPageOffset可以得到第i页的第一个item
+      //     offset: getPageOffset(this.currentPage, PAGE_SIZE),
+      //   });
+      //   this.comments = comments;
+      //   // 此酒店的评论数
+      //   this.total = total;
+    },
+    async onPageChange(page) {
+      let _this = this;
+      _this.currentPage = page;
+      _this.getComments();
+      scrollInto(_this.$refs.comments);
+    },
+    // popover button
+    showHousingCode() {
+      let _this = this;
+      _this.housingCodeVisible = true;
+    },
+    showCancelPolicy() {
+      let _this = this;
+      _this.cancelPolicyVisible = true;
+    },
+    showSafeIntro() {
+      let _this = this;
+      _this.safeIntroVisible = true;
+    },
+    fatherChangeDate(dateArr) {
+      let _this = this;
+      _this.dateOne = dateArr[0];
+      _this.dateTwo = dateArr[1];
+    },
   },
   watch: {
     //   监听scroll高度,用于锚点样式随页面滑动而改变
     scroll: function () {
       this.loadScroll();
+    },
+  },
+  computed: {
+    formatDates: function () {
+      if (this.dateOne != "" && this.dateTwo != "") {
+        let formatDateOne = this.dateOne.replace(/-/g, "/").substr(5);
+        let formatDateTwo = this.dateTwo.replace(/-/g, "/").substr(5);
+        return formatDateOne + " - " + formatDateTwo;
+      } else {
+        return "选择日期";
+      }
+    },
+    orderDate: function () {
+      let dateArr = new Array();
+      if (this.dateOne != "" && this.dateTwo != "") {
+        dateArr.push(this.dateOne);
+        dateArr.push(this.dateTwo);
+        console.log(dateArr);
+      }
+      return dateArr;
     },
   },
 };
@@ -281,7 +635,8 @@ export default {
 .house_main_container {
   display: flex;
   justify-content: space-between;
-  height: 6000px;
+  /* height: 7000px; */
+  color: rgb(72, 72, 72);
 }
 .house_info_container {
   width: 60%;
@@ -306,9 +661,6 @@ export default {
 .label_container_focus {
   border-bottom: 3px solid rgb(72, 72, 72);
 }
-/* .label_container:hover {
-  border-bottom: 3px solid rgb(72, 72, 72);
-} */
 .label_btn {
   background-color: white;
   border: transparent;
@@ -345,7 +697,6 @@ export default {
 }
 .house_detail_title {
   font-size: 2rem;
-  color: rgb(72, 72, 72);
   font-weight: bold;
   margin-top: 10px;
 }
@@ -355,7 +706,6 @@ export default {
 }
 .house_detail_label_container {
   font-size: 0.7rem;
-  color: rgb(72, 72, 72);
   font-weight: bold;
   border-radius: 15px;
   padding: 6.4px 9.8px;
@@ -383,7 +733,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .center_bottom_container {
   width: 100%;
   margin-top: 16px;
@@ -391,7 +740,6 @@ export default {
   padding: 40px 15px 20px 15px;
   font-size: 1rem;
   line-height: 1.375em;
-  color: rgb(72, 72, 72);
   position: relative;
 }
 .deco_tri {
@@ -417,7 +765,6 @@ export default {
 .house_detail_more_container {
   padding: 20px;
   font-weight: lighter;
-  color: rgb(72, 72, 72);
   font-size: 1.05rem;
 }
 .text_desc_title,
@@ -435,7 +782,6 @@ export default {
 .guarantee {
   margin-top: 30px;
   font-size: 1rem;
-  color: rgb(72, 72, 72);
 }
 .guarantee_bold {
   color: black;
@@ -449,7 +795,6 @@ export default {
 }
 .message_container {
   margin-top: 30px;
-  color: rgb(72, 72, 72);
 }
 .message_bold {
   width: 25%;
@@ -461,9 +806,7 @@ export default {
 .comment_container {
   margin-top: 20px;
 }
-.house_comment {
-  color: rgb(72, 72, 72);
-}
+
 .house_comment_title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -498,26 +841,173 @@ export default {
 }
 .bad_btn {
   background: rgb(246, 246, 246);
-  color: rgb(72, 72, 72);
 }
 .comment_btn_focus {
   background: rgb(0, 132, 137);
   color: rgb(255, 255, 255);
+}
+.pagination {
+  margin-top: 30px;
+}
+/* house date */
+.house_date_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.house_date_tips {
+  margin-top: 40px;
+}
+.date_btn {
+  width: 200px;
+  height: 31px;
+  background-color: #008489;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.datepicker-trigger {
+  margin-top: 20px;
+}
+.airbnb_date {
+  margin-top: 20px;
+}
+/* house location */
+.house_location_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.location_title,
+.transport_title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 30px;
+}
+.location_desc,
+.transport_desc {
+  margin-top: 20px;
+}
+/* house map */
+.map_container {
+  margin-top: 40px;
+}
+/* house tips */
+.house_tips_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+/* .housing_code_,.cancel_policy_,.safe_intro_,.secure_booking_,.invoice_notes_ */
+.housing_code_container,
+.cancel_policy_container,
+.safe_intro_container,
+.secure_booking_container,
+.invoice_notes_container {
+  overflow: hidden;
+  margin-top: 30px;
+}
+.housing_code_title,
+.cancel_policy_title,
+.safe_intro_title,
+.secure_booking_title,
+.invoice_notes_title {
+  width: 25%;
+  float: left;
+  font-weight: bold;
+}
+.housing_code_desc_container,
+.cancel_policy_desc_container,
+.safe_intro_desc_container,
+.secure_booking_desc_container,
+.invoice_notes_desc_container {
+  width: 75%;
+  float: left;
+}
+.cancel_policy_desc {
+  font-weight: bold;
+}
+.housing_code_btn,
+.cancel_policy_btn,
+.safe_intro_btn {
+  color: rgb(0, 132, 137);
+  font-weight: bold;
+  background-color: transparent;
+  border: none;
+}
+.housing_code_btn:hover,
+.cancel_policy_btn:hover,
+.safe_intro_btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+/* button popover dialog */
+/* house  */
+.housing_pop_title,
+.safe_pop_title {
+  color: rgb(72, 72, 72);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.user_rights_container {
+  margin-top: 50px;
+  color: rgb(72, 72, 72);
+  font-size: 1rem;
+}
+.user_rights_title,
+.attention_matters_title {
+  font-weight: bold;
+}
+.attention_matters_container {
+  margin-top: 30px;
+  font-size: 1rem;
+  color: rgb(72, 72, 72);
+}
+.user_rights,
+.attention_matters {
+  margin-top: 15px;
+}
+/* safe */
+.icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.safe_pop_intro_container {
+  margin-top: 40px;
+  color: rgb(72, 72, 72);
+  overflow: hidden;
+}
+.safe_intro {
+  margin-top: 10px;
+  overflow: hidden;
+}
+.other_safe_intro_container {
+  margin-top: 30px;
+  color: rgb(72, 72, 72);
+}
+.other_safe_intro_title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.other_safe_intro {
+  margin-top: 20px;
+  overflow: hidden;
 }
 .house_detail,
 .house_comment,
 .house_date,
 .house_location,
 .house_tips {
-  margin-top: 10px;
-  height: 1000px;
+  margin-top: 30px;
+  /* height: 1500px; */
   padding: 3px;
 }
-.house_order {
-  width: 100px;
-  height: 100px;
-  background-color: black;
+.space_occupy {
+  height: 200px;
+}
+.house_order_container {
+  width: 376px;
+  height: 448px;
   position: sticky;
-  top: 50%;
+  top: 100px;
 }
 </style>
