@@ -154,6 +154,8 @@
 <script>
 import NavTopLeft from "./NavTopLeft.vue";
 import NavTopRight from "./NavTopRight.vue";
+import { userLogin } from "@/api/user.js";
+import { userRegister } from "@/api/user.js";
 
 export default {
   components: { NavTopLeft, NavTopRight },
@@ -189,7 +191,7 @@ export default {
         }
       }
     };
-    // 密码验证规则
+    // 注册密码验证规则
     let validPassword = (rule, value, callback) => {
       if (value == "" || value == undefined) {
         callback(new Error("请设置密码"));
@@ -253,8 +255,8 @@ export default {
       },
       lRules: {
         region: [{ required: true, message: "选择国家" }],
-        phone: [{ validator: validPhone }],
-        password: [{ validator: validPassword }],
+        phone: [{ required: true, message: "请输入手机号码" }],
+        password: [{ required: true, message: "请输入密码" }],
       },
     };
   },
@@ -268,36 +270,42 @@ export default {
       this.op = 2;
     },
     rSubmitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
+      this.$refs[formName].validate(async (valid) => {
+        const { status, data, message } = await userRegister({
+          idCard: 11,
+          password: this.rForm.password,
+          userName: this.rForm.name,
+          userPhone: this.rForm.phone,
+        });
+        console.log(data);
+        console.log(message);
+        if (valid && status) {
           this.$message({
             message: "注册成功",
             type: "success",
           });
-          //   进行数据的封装
-          console.log(
-            this.rForm.email,
-            this.rForm.phone,
-            this.rForm.region,
-            this.rForm.password,
-            this.rForm.name,
-            this.rForm.email
-          );
           this.formShow = false;
           this.closeDialogue();
+        } else if (valid == true) {
+          this.$message({ message: "手机号已被注册", type: "error" });
         } else {
           return false;
         }
       });
     },
     lSubmitForm(formName) {
-      //   检查密码与电话
-      this.$refs[formName].validate((valid) => {
+      // 检查密码与电话
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.$message({
-            message: "注册成功",
+            message: "登录成功",
             type: "success",
           });
+          const { status, data } = await userLogin({
+            password: this.lForm.password,
+            userPhone: this.lForm.phone,
+          });
+          console.log(status, data);
           this.formShow = false;
           this.closeDialogue();
         } else {
