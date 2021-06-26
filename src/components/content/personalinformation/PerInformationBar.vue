@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import bus from "@/utils/bus.js";
 import InformationCard from "./showcase/InformationCard.vue";
 import ChangeMes from "./showcase/ChangeMes.vue";
 export default {
@@ -32,9 +33,14 @@ export default {
       })
       .then((res) => {
         this.user = res.data.data;
+        this.$refs.inforCard.updateTable();
+        this.emitUser();
       });
   },
   methods: {
+    emitUser() {
+      bus.$emit("emiting", "http://localhost:8080/" + this.user.userPic);
+    },
     changMes() {
       this.changeBar = true;
     },

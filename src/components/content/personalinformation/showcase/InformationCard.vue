@@ -2,11 +2,7 @@
   <!-----------左边展示栏------------>
   <div class="per_left_bar_out">
     <div class="per_left_bar_in">
-      <img
-        src="@/../public/test_img/assistant.jpg"
-        class="head_pic"
-        @click="changeHeadPic"
-      />
+      <img :src="imageUrl" class="head_pic" @click="changeHeadPic" />
       <b class="user_name">{{ this.$parent.user.userName }}</b>
       <el-divider class="divider"></el-divider>
       <div class="information_show">
@@ -36,7 +32,8 @@
       @opened="opened"
       destroy-on-close="true"
     >
-      <ChangeHeadPic ref="changeHeadPic" />
+      <!-- <ChangeHeadPic ref="changeHeadPic" /> -->
+      <input type="file" class="file" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
@@ -45,20 +42,46 @@
 </template>
 
 <script>
-import ChangeHeadPic from "./ChangeHeadPic.vue";
+// import ChangeHeadPic from "./ChangeHeadPic.vue";
 export default {
   name: "InformationCard",
-  components: { ChangeHeadPic },
+  // components: { ChangeHeadPic },
   data() {
     return {
       centerDialogVisible: false,
+      formData: "",
+      imageUrl: "http://localhost:8080/" + this.$parent.user.userPic,
       //用户信息
     };
   },
   created() {},
   methods: {
+    updateTable() {
+      this.imageUrl = "http://localhost:8080/" + this.$parent.user.userPic;
+    },
     submit() {
-      this.$refs.changeHeadPic.submit();
+      var formData = new window.FormData();
+      formData.append(
+        "userPic",
+        document.querySelector("input[type=file]").files[0]
+      );
+      formData.append("id", this.$parent.id);
+      var options = {
+        // 设置axios的参数
+        url: "/userManager/userUpdateByPic",
+        data: formData,
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      this.$axios(options).then(() => {
+        this.$message({
+          type: "success",
+          message: "修改成功！",
+        });
+        this.centerDialogVisible = false;
+      }); // 发送请求
     },
     changeMes() {
       this.$emit("changmes");

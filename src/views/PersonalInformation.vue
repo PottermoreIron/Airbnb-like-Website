@@ -27,11 +27,12 @@ export default {
   },
   data() {
     return {
-      userName: "",
+      user: [],
       displayBar: 1,
-      id: 1,
+      id: 999999999999999,
     };
   },
+  created() {},
   methods: {
     goToPer() {
       this.displayBar = 1;

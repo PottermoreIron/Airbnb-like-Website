@@ -3,6 +3,7 @@
     <el-upload
       action="http://localhost:8080/api/userManager/userUpdateByPic"
       name="userPic"
+      :data="myData"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
     >
@@ -18,7 +19,7 @@ export default {
   data() {
     return {
       imageUrl: "",
-      headers1: {
+      myData: {
         id: 1,
       },
     };

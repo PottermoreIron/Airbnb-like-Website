@@ -30,21 +30,31 @@
           ><b>个人中心</b></el-button
         >
       </div>
-      <img
-        src="@/../public/test_img/assistant.jpg"
-        class="per_nav_top_bar_headpic"
-      />
+      <img :src="imageUrl" class="per_nav_top_bar_headpic" />
     </div>
   </div>
 </template>
 
 <script>
+import bus from "@/utils/bus.js";
 export default {
   name: "PerNavTop",
   data() {
-    return {};
+    return {
+      imageUrl: "",
+    };
+  },
+  created() {
+    bus.$on("emiting", (data) => {
+      this.imageUrl = data;
+      console.log(this.imageUrl);
+    });
   },
   methods: {
+    update() {
+      this.imageUrl =
+        "http://localhost:8080/" + this.$parent.$refs.perInf.user.userPic;
+    },
     // 前往个人页面
     goToPer() {
       this.$emit("gotoper");

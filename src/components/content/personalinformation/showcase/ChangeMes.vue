@@ -146,13 +146,13 @@ export default {
               } else {
                 this.$message({
                   message: "两次密码输入不同！",
-                  type: "danger",
+                  type: "error",
                 });
               }
             } else {
               this.$message({
                 message: "当前密码输入错误！",
-                type: "danger",
+                type: "error",
               });
             }
           }
