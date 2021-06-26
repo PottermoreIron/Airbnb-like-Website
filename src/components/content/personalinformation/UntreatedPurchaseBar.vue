@@ -4,21 +4,21 @@
     <!----------------------- 表格 ------------------------->
     <div class="per_show_bar_table">
       <el-table
-        :data="tableData"
+        :data="thisData"
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column prop="date" label="日期" width="180" sortable>
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.purchaseStart }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="用户" width="180">
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference" class="name-wrapper">
-                {{ scope.row.name }}
+                {{ scope.row.purchaseUser }}
               </div>
             </el-popover>
           </template>
@@ -27,7 +27,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.hotel }}
+                {{ scope.row.purchaseHotel }}
               </div>
             </el-popover>
           </template>
@@ -36,7 +36,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.price }}
+                {{ scope.row.purchasePrice }}
               </div>
             </el-popover>
           </template>
@@ -45,7 +45,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.star }}
+                {{ scope.row.purchaseStar }}
               </div>
             </el-popover>
           </template>
@@ -88,6 +88,7 @@
         width="550px"
         center
         @opened="opened"
+        destroy-on-close="true"
       >
         <ShowPurInfor ref="showPurInfor" />
         <span slot="footer" class="dialog-footer">
@@ -108,69 +109,30 @@ export default {
   data() {
     return {
       centerDialogVisible: false,
-      purchaseTotal: 12,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 1,
-        },
-      ],
+      purchaseTotal: 0,
       x: this.row,
+      thisData: [],
     };
   },
+  created() {
+    this.$axios
+      .get("/userManager/showUserDoingPurchase", {
+        params: {
+          id: this.$parent.id,
+        },
+      })
+      .then((res) => {
+        this.thisData = res.data.data;
+        this.purchaseTotal = res.data.data.length;
+      });
+  },
   methods: {
+    updateTable() {
+      this.tableShow = false;
+      this.$nextTick(function () {
+        this.tableShow = true;
+      });
+    },
     handleEdit(index, row) {
       this.centerDialogVisible = true;
       this.x = row;
@@ -179,7 +141,7 @@ export default {
       this.$refs.showPurInfor.open(this.x);
     },
     //弹出提示框
-    open(id) {
+    open(x) {
       this.$msgbox
         .confirm("是否确定取消订单", "提示", {
           confirmButtonText: "确定",
@@ -187,15 +149,39 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "取消成功!",
-          }).catch(() => {});
-          console.log(id);
+          this.$axios
+            .get("/userManager/cancelPurchase", {
+              params: {
+                id: x.id,
+              },
+            })
+            .then((res) => {
+              if (res.data.data == null) {
+                this.$message({
+                  type: "error",
+                  message: "只能在入住日之前退订！",
+                });
+              } else {
+                this.$message({
+                  type: "success",
+                  message: "退订成功！",
+                });
+              }
+              this.$axios
+                .get("/userManager/showUserDoingPurchase", {
+                  params: {
+                    id: this.$parent.id,
+                  },
+                })
+                .then((res) => {
+                  this.thisData = res.data.data;
+                  this.purchaseTotal = res.data.data.length;
+                });
+            });
         });
     },
     handleDelete(index, row) {
-      this.open(row.name);
+      this.open(row);
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

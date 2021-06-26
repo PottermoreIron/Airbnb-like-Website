@@ -3,18 +3,18 @@
     <div class="per_show_bar_tital"><b>已完成的订单</b></div>
     <!----------------------- 表格 ------------------------->
     <div class="per_show_bar_table">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="thisData" style="width: 100%">
         <el-table-column prop="date" label="日期" width="180" sortable>
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.purchaseStart }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="用户" width="180">
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference" class="name-wrapper">
-                {{ scope.row.name }}
+                {{ scope.row.purchaseUser }}
               </div>
             </el-popover>
           </template>
@@ -23,7 +23,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.hotel }}
+                {{ scope.row.purchaseHotel }}
               </div>
             </el-popover>
           </template>
@@ -32,7 +32,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.price }}
+                {{ scope.row.purchasePrice }}
               </div>
             </el-popover>
           </template>
@@ -41,7 +41,7 @@
           <template slot-scope="scope">
             <el-popover>
               <div slot="reference">
-                {{ scope.row.star }}
+                {{ scope.row.purchaseStar }}
               </div>
             </el-popover>
           </template>
@@ -76,6 +76,7 @@
       width="550px"
       center
       @opened="opened"
+      destroy-on-close="true"
     >
       <ShowPurInfor ref="showPurInfor" />
       <span slot="footer" class="dialog-footer">
@@ -95,67 +96,22 @@ export default {
   data() {
     return {
       centerDialogVisible: false,
-      purchaseTotal: 12,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 4,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 4,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 3,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 3,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 3,
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 3,
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          hotel: 12,
-          star: 2,
-          price: 200,
-          ep: 3,
-        },
-      ],
+      purchaseTotal: 0,
       x: this.row,
+      thisData: [],
     };
+  },
+  created() {
+    this.$axios
+      .get("/userManager/showUserPastPurchase", {
+        params: {
+          id: this.$parent.id,
+        },
+      })
+      .then((res) => {
+        this.thisData = res.data.data;
+        this.purchaseTotal = res.data.data.length;
+      });
   },
   methods: {
     // 对话框回调opened

@@ -2,16 +2,20 @@
   <!-----------左边展示栏------------>
   <div class="per_left_bar_out">
     <div class="per_left_bar_in">
-      <img src="@/static/test_img/assistant.jpg" class="head_pic" />
-      <b class="user_name">{{ user.userName }}</b>
+      <img
+        src="@/../public/test_img/assistant.jpg"
+        class="head_pic"
+        @click="changeHeadPic"
+      />
+      <b class="user_name">{{ this.$parent.user.userName }}</b>
       <el-divider class="divider"></el-divider>
       <div class="information_show">
-        <span class="information_zoon">ID : {{ user.id }}</span>
+        <span class="information_zoon">ID : {{ this.$parent.user.id }}</span>
         <span class="information_zoon"
-          ><i class="el-icon-phone" /> : {{ user.userPhone }}</span
+          ><i class="el-icon-phone" /> : {{ this.$parent.user.userPhone }}</span
         >
         <span class="information_zoon"
-          ><i class="el-icon-user" /> : {{ user.userIdc }}</span
+          ><i class="el-icon-user" /> : {{ this.$parent.user.userIdc }}</span
         >
       </div>
       <el-divider class="divider"></el-divider>
@@ -24,43 +28,43 @@
         >修改信息</el-button
       >
     </div>
+    <el-dialog
+      title="更换头像"
+      :visible.sync="centerDialogVisible"
+      width="550px"
+      center
+      @opened="opened"
+      destroy-on-close="true"
+    >
+      <ChangeHeadPic ref="changeHeadPic" />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ChangeHeadPic from "./ChangeHeadPic.vue";
 export default {
   name: "InformationCard",
+  components: { ChangeHeadPic },
   data() {
     return {
+      centerDialogVisible: false,
       //用户信息
-      user: [],
     };
   },
-  created() {
-    this.$axios
-      .get("/userManager/getUserById", {
-        params: {
-          id: this.$parent.id,
-        },
-      })
-      .then((res) => {
-        this.user = res.data.data;
-      });
-  },
+  created() {},
   methods: {
+    submit() {
+      this.$refs.changeHeadPic.submit();
+    },
     changeMes() {
       this.$emit("changmes");
     },
-    update() {
-      this.$axios
-        .get("/userManager/getUserById", {
-          params: {
-            id: this.$parent.id,
-          },
-        })
-        .then((res) => {
-          this.user = res.data.data;
-        });
+    changeHeadPic() {
+      this.centerDialogVisible = true;
     },
   },
 };
@@ -90,6 +94,7 @@ export default {
   width: 115px;
   border-radius: 100%;
   margin-top: 60px;
+  cursor: pointer;
 }
 .user_name {
   height: 40px;

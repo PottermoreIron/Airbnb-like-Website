@@ -17,9 +17,22 @@ export default {
   components: { InformationCard, ChangeMes },
   data() {
     return {
-      id: 2,
+      user: [],
+      id: 1,
       changeBar: false,
     };
+  },
+  created() {
+    this.id = this.$parent.id;
+    this.$axios
+      .get("/userManager/getUserById", {
+        params: {
+          id: this.id,
+        },
+      })
+      .then((res) => {
+        this.user = res.data.data;
+      });
   },
   methods: {
     changMes() {
@@ -27,7 +40,6 @@ export default {
     },
     exitChangeBar() {
       this.changeBar = false;
-      this.$refs.inforCard.update();
     },
   },
 };

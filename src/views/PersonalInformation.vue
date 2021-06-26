@@ -29,6 +29,7 @@ export default {
     return {
       userName: "",
       displayBar: 1,
+      id: 1,
     };
   },
   methods: {

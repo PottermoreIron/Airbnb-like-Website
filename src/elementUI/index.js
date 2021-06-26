@@ -33,6 +33,7 @@ import {
   Rate,
   Calendar,
   InputNumber,
+  Upload,
 } from "element-ui";
 
 Vue.use(Button);
@@ -68,3 +69,4 @@ Vue.prototype.$msgbox = MessageBox;
 Vue.use(Rate);
 Vue.use(Calendar);
 Vue.use(InputNumber);
+Vue.use(Upload);

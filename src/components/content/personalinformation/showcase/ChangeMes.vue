@@ -74,9 +74,9 @@ export default {
   data() {
     return {
       user: [],
-      changeName: "Cherry",
-      changePhoneNumber: "111111",
-      changeIdCardNumber: "123145",
+      changeName: "",
+      changePhoneNumber: "",
+      changeIdCardNumber: "",
       corPwd: "",
       changePwd1: "",
       changePwd2: "",
@@ -108,19 +108,54 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.$axios.get("/userManager/userUpdateByIdCard", {
-            params: { id: this.$parent.id, idCard: this.changeIdCardNumber },
-          });
-          this.$axios.get("/userManager/userUpdateByName", {
-            params: { id: this.$parent.id, userName: this.changeName },
-          });
-          this.$axios.get("/userManager/userUpdateByPhone", {
-            params: {
-              id: this.$parent.id,
-              userPhone: this.changePhoneNumber,
-            },
-          });
-          this.$emit("exitchangebar");
+          if (this.changePwd1 == "") {
+            this.$axios.get("/userManager/userUpdatePhoneNameAndIdcard", {
+              params: {
+                id: this.$parent.id,
+                userIdc: this.changeIdCardNumber,
+                userName: this.changeName,
+                userPhone: this.changePhoneNumber,
+              },
+            });
+            this.$parent.user.userName = this.changeName;
+            this.$parent.user.userPhone = this.changePhoneNumber;
+            this.$parent.user.userIdc = this.changeIdCardNumber;
+            this.$emit("exitchangebar");
+            this.$message({
+              message: "修改成功！",
+              type: "success",
+            });
+          } else {
+            if (this.user.userPw == this.corPwd) {
+              if (this.changePwd1 == this.changePwd2) {
+                this.$axios.get("/userManager/userUpdate", {
+                  params: {
+                    id: this.$parent.id,
+                    userIdc: this.changeIdCardNumber,
+                    userName: this.changeName,
+                    userPhone: this.changePhoneNumber,
+                    userPw: this.changePwd1,
+                    userPic: this.user.userPic,
+                  },
+                });
+                this.$emit("exitchangebar");
+                this.$message({
+                  message: "修改成功！",
+                  type: "success",
+                });
+              } else {
+                this.$message({
+                  message: "两次密码输入不同！",
+                  type: "danger",
+                });
+              }
+            } else {
+              this.$message({
+                message: "当前密码输入错误！",
+                type: "danger",
+              });
+            }
+          }
         })
         .catch(() => {});
     },

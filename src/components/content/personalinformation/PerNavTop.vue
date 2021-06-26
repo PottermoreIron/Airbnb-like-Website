@@ -31,7 +31,7 @@
         >
       </div>
       <img
-        src="../../../static/test_img/assistant.jpg"
+        src="@/../public/test_img/assistant.jpg"
         class="per_nav_top_bar_headpic"
       />
     </div>
