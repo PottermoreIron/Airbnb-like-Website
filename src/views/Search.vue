@@ -17,12 +17,17 @@
     <div style="margin-top: 10px; margin-bottom: 0px">
       <div class="separation"></div>
     </div>
-    <div class="hotel_list_container">
-      <span class="hotel_list_title">300多处住宿</span>
-      <div class="hotel_list">
-        <div class="hotel_list_item_container">
-          <hotel-item />
+    <div class="main_container">
+      <div class="hotel_list_container">
+        <span class="hotel_list_title">300多处住宿</span>
+        <div class="hotel_list">
+          <div class="hotel_list_item_container">
+            <hotel-item />
+          </div>
         </div>
+      </div>
+      <div class="search_map_container">
+        <search-map />
       </div>
     </div>
   </div>
@@ -31,8 +36,9 @@
 <script>
 import NavTop from "../components/content/home/header/navTop/NavTop.vue";
 import HotelItem from "../components/content/search/HotelItem.vue";
+import SearchMap from "../components/content/search/SearchMap.vue";
 export default {
-  components: { NavTop, HotelItem },
+  components: { NavTop, HotelItem, SearchMap },
   name: "Search",
   data() {
     return {};
@@ -74,6 +80,10 @@ export default {
   border: 1px solid rgb(0, 132, 137);
   color: white;
 }
+.main_container {
+  width: 100%;
+  display: flex;
+}
 /* hotel list */
 .hotel_list_container {
   width: 60%;
@@ -88,5 +98,10 @@ export default {
 /* hotel item */
 .hotel_list_item_container {
   margin-top: 13px;
+}
+/* search map */
+.search_map_container {
+  margin-left: 2%;
+  width: 36%;
 }
 </style>

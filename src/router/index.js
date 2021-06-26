@@ -4,6 +4,10 @@ import VueRouter from "vue-router";
 // import House from "@/views/House.vue";
 // import Search from "@/views/Search.vue";
 import PersonalInformation from "@/views/PersonalInformation.vue";
+import Home from "@/views/Home.vue";
+import House from "@/views/House.vue";
+// import Search from "@/views/Search.vue";
+// import Order from "@/views/Order.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,17 +22,15 @@ const routes = [
   //   component: House,
   // },
   // import House from "@/views/House.vue";
-
-  //   {
-  //     path: "/",
-  //     name: "Home",
-  //     component: Home,
-  //   },
-  //   {
-  //     path: "/house",
-  //     name: "House",
-  //     component: House,
-  //   },
+  {
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/house",
+    name: "House",
+    component: House,
+  },
   //   {
   //     path: "",
   //     redirect: "/house",
@@ -37,6 +39,18 @@ const routes = [
   //     path: "/house",
   //     name: "House",
   //     component: House,
+  //   },
+  //   { path: "", redirect: "/search" },
+  //   {
+  //     path: "/search",
+  //     name: "Search",
+  //     component: Search,
+  //   },
+  //   { path: "", redirect: "/order" },
+  //   {
+  //     path: "/order",
+  //     name: "Order",
+  //     component: Order,
   //   },
   // { path: "", redirect: "/search" },
   // {

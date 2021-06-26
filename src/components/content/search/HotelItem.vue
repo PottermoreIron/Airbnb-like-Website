@@ -51,7 +51,18 @@
       <div style="margin-left: 15px; margin-right: 15px">
         <div class="separation"></div>
       </div>
-      <div class="hotel_price_container"></div>
+      <div class="hotel_price_container">
+        <div class="price">￥176</div>
+        <div class="per">/ 晚</div>
+        <div class="discount">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-rights"></use></svg
+          >夏季特惠9.5折
+        </div>
+        <div class="avatar_container">
+          <img src="/test_img/avatar.jpg" class="avatar_img" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -150,6 +161,7 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow-wrap: break-word;
+  line-height: 1.3rem;
 }
 .hotel_label_container {
   display: flex;
@@ -173,6 +185,30 @@ export default {
 .hotel_price_container {
   height: 100%;
   width: 31%;
-  background-color: crimson;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.price {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.per {
+  margin-top: 5px;
+  font-size: 0.8rem;
+}
+.discount {
+  margin-top: 5px;
+  font-size: 0.8rem;
+}
+.avatar_container {
+  width: 40px;
+  height: 40px;
+  margin-top: 60px;
+}
+.avatar_img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
 }
 </style>
