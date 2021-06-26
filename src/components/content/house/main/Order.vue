@@ -203,9 +203,41 @@
           </el-popover>
         </div>
       </div>
+      <div class="room_label_container">
+        <div
+          :class="{ bigBed_label: true, room_label_focus: roomLabel.bigBed }"
+          @click="chooseBigBed"
+        >
+          大床房
+        </div>
+        <div
+          :class="{ bath_label: true, room_label_focus: roomLabel.bath }"
+          @click="chooseBath"
+        >
+          淋浴
+        </div>
+        <div
+          :class="{ con_label: true, room_label_focus: roomLabel.con }"
+          @click="chooseCon"
+        >
+          空调
+        </div>
+        <div
+          :class="{ wifi_label: true, room_label_focus: roomLabel.wifi }"
+          @click="chooseWiFi"
+        >
+          WiFi
+        </div>
+        <div
+          :class="{ window_label: true, room_label_focus: roomLabel.window }"
+          @click="chooseWindow"
+        >
+          窗户
+        </div>
+      </div>
     </div>
     <div class="order_btn_container">
-      <button class="order_btn">预订</button>
+      <button class="order_btn" @click="goFormDetail">预订</button>
     </div>
   </div>
 </template>
@@ -221,6 +253,13 @@ export default {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
         },
+      },
+      roomLabel: {
+        bigBed: false,
+        bath: false,
+        con: false,
+        wifi: false,
+        window: false,
       },
       adultNum: "",
       childrenNum: "",
@@ -242,6 +281,29 @@ export default {
     sonChangeDate() {
       let dateArr = Array.from(this.date);
       this.$emit("changeDate", dateArr);
+    },
+    goFormDetail() {
+      this.$router.push("/order");
+    },
+    chooseBigBed() {
+      let _this = this;
+      _this.roomLabel.bigBed = !_this.roomLabel.bigBed;
+    },
+    chooseBath() {
+      let _this = this;
+      _this.roomLabel.bath = !_this.roomLabel.bath;
+    },
+    chooseCon() {
+      let _this = this;
+      _this.roomLabel.con = !_this.roomLabel.con;
+    },
+    chooseWiFi() {
+      let _this = this;
+      _this.roomLabel.wifi = !_this.roomLabel.wifi;
+    },
+    chooseWindow() {
+      let _this = this;
+      _this.roomLabel.window = !_this.roomLabel.window;
     },
   },
 };
@@ -353,6 +415,33 @@ export default {
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
+}
+.room_label_container {
+  display: flex;
+  margin-top: 20px;
+}
+.bigBed_label,
+.con_label,
+.wifi_label,
+.window_label,
+.bath_label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 15px;
+  padding: 6.4px 9.8px;
+  background-color: rgb(243, 243, 243);
+  margin-right: 10px;
+}
+.bigBed_label:hover,
+.con_label:hover,
+.wifi_label:hover,
+.window_label:hover,
+.bath_label:hover {
+  cursor: pointer;
+}
+.room_label_focus {
+  background-color: rgb(234, 247, 234);
+  color: rgb(42, 110, 0);
 }
 </style>
 <style>
