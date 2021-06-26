@@ -120,7 +120,12 @@
       >
       </el-date-picker>
     </div>
-    <el-button icon="el-icon-search" circle class="search_button"></el-button>
+    <el-button
+      icon="el-icon-search"
+      circle
+      class="search_button"
+      @click="goSearchDetail"
+    ></el-button>
   </div>
 </template>
 
@@ -159,6 +164,9 @@ export default {
       setTimeout(function () {
         _this.showSuggestion = false;
       }, 200);
+    },
+    goSearchDetail() {
+      this.$router.push("/search");
     },
   },
 };

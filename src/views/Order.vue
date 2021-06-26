@@ -5,7 +5,7 @@
       <div class="separation"></div>
     </div>
     <div class="title_container">
-      <div class="back_container">
+      <div class="back_container" @click="goBackHouse">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-back"></use>
         </svg>
@@ -15,8 +15,12 @@
       </div>
     </div>
     <div class="main_container">
-      <div class="order_main_container"><order-main /></div>
-      <div class="order_card_container"><order-card /></div>
+      <div class="order_main_container">
+        <order-main @sonDateChange="fatherDateChange" />
+      </div>
+      <div class="order_card_container">
+        <order-card :day="day" :price="258.0" />
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +32,19 @@ import OrderMain from "../components/content/order/OrderMain.vue";
 export default {
   components: { OrderMain, OrderCard, NavTop },
   name: "Order",
+  data() {
+    return {
+      day: "1",
+    };
+  },
+  methods: {
+    fatherDateChange(day) {
+      this.day = day;
+    },
+    goBackHouse() {
+      this.$router.go(-1);
+    },
+  },
 };
 </script>
 
@@ -75,5 +92,8 @@ export default {
 }
 .order_card_container {
   width: 40%;
+  position: sticky;
+  top: 10%;
+  height: 106px;
 }
 </style>

@@ -32,17 +32,17 @@ const routes = [
   //     path: "",
   //     redirect: "/house",
   //   },
-  //   {
-  //     path: "/house",
-  //     name: "House",
-  //     component: House,
-  //   },
+  // {
+  //   path: "/house",
+  //   name: "House",
+  //   component: House,
+  // },
   //   { path: "", redirect: "/search" },
-  //   {
-  //     path: "/search",
-  //     name: "Search",
-  //     component: Search,
-  //   },
+  // {
+  //   path: "/search",
+  //   name: "Search",
+  //   component: Search,
+  // },
   //   { path: "", redirect: "/order" },
   //   {
   //     path: "/order",

@@ -1006,7 +1006,7 @@ export default {
 }
 .house_order_container {
   width: 376px;
-  height: 448px;
+  height: 480px;
   position: sticky;
   top: 100px;
 }

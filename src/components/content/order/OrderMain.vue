@@ -18,23 +18,148 @@
       <div class="trip_date_container">
         <div class="date_text_container">
           <div class="date_text_top">日期</div>
-          <div class="date_text_bottom">6月27日 – 7月19日</div>
+          <div class="date_text_bottom">{{ startDate }} – {{ endDate }}</div>
         </div>
         <div class="edit_date_btn_container">
           <div class="edit_date_btn_container">
-            <button class="edit_date_btn">编辑</button>
+            <button class="edit_date_btn" @click="chooseDate">编辑</button>
           </div>
         </div>
+        <el-dialog :visible.sync="datePickerVisible" width="661px">
+          <div class="date_picker_container">
+            <div class="nignt">{{ day }}</div>
+            <div class="picker_container">
+              <el-date-picker
+                v-model="date"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                style="width: 100%"
+                value-format="yyyy-MM-dd"
+                :picker-options="pickerOptions"
+                @change="dateChange"
+              >
+              </el-date-picker>
+            </div>
+          </div>
+        </el-dialog>
       </div>
       <div class="trip_num_container">
         <div class="num_text_container">
           <div class="num_text_top">房客人数</div>
-          <div class="num_text_bottom">1位房客</div>
+          <div class="num_text_bottom">{{ numForm.totalNum }}位房客</div>
         </div>
         <div class="edit_num_btn_container">
           <div class="edit_num_btn_container">
-            <button class="edit_num_btn">编辑</button>
+            <button class="edit_num_btn" @click="chooseNum">编辑</button>
           </div>
+        </div>
+        <el-dialog
+          :visible.sync="numPickerVisible"
+          width="30%"
+          @close="closeNumDialogue"
+        >
+          <el-form :model="numForm" ref="numForm">
+            <div class="num_picker_container">
+              <div class="num_picker_title_container">
+                <div class="num_picker_title">房客人数</div>
+                <div class="num_container">
+                  <div class="adult_container">
+                    <div class="adult">成人</div>
+                    <div class="choose_num">
+                      <el-form-item prop="adultNum">
+                        <el-input-number
+                          v-model="numForm.adultNum"
+                          :min="1"
+                          :max="10"
+                          label="描述文字"
+                          size="small"
+                        ></el-input-number>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="children_container">
+                    <div class="children_text_container">
+                      <div class="children_text_top">儿童</div>
+                      <div class="children_text_bottom">2-12岁</div>
+                    </div>
+                    <div class="choose_num">
+                      <el-form-item prop="childrenNum">
+                        <el-input-number
+                          v-model="numForm.childrenNum"
+                          :min="0"
+                          :max="10"
+                          label="描述文字"
+                          size="small"
+                        ></el-input-number>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="babe_container">
+                    <div class="babe_text_container">
+                      <div class="babe_text_top">婴儿</div>
+                      <div class="babe_text_bottom">两岁以下</div>
+                    </div>
+                    <div class="choose_num">
+                      <el-form-item prop="babeNum">
+                        <el-input-number
+                          v-model="numForm.babeNum"
+                          :min="0"
+                          :max="10"
+                          label="描述文字"
+                          size="small"
+                        ></el-input-number>
+                      </el-form-item>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 25px; margin-bottom: 0px">
+                <div class="separation"></div>
+              </div>
+              <div class="num_btn_container">
+                <button class="num_cancel_btn" type="button" @click="numCancel">
+                  取消
+                </button>
+                <button class="num_save_btn" type="button" @click="numSave">
+                  保存
+                </button>
+              </div>
+            </div>
+          </el-form>
+        </el-dialog>
+      </div>
+      <div class="room_label_container">
+        <div
+          :class="{ bigBed_label: true, room_label_focus: roomLabel.bigBed }"
+          @click="chooseBigBed"
+        >
+          大床房
+        </div>
+        <div
+          :class="{ bath_label: true, room_label_focus: roomLabel.bath }"
+          @click="chooseBath"
+        >
+          淋浴
+        </div>
+        <div
+          :class="{ con_label: true, room_label_focus: roomLabel.con }"
+          @click="chooseCon"
+        >
+          空调
+        </div>
+        <div
+          :class="{ wifi_label: true, room_label_focus: roomLabel.wifi }"
+          @click="chooseWiFi"
+        >
+          WiFi
+        </div>
+        <div
+          :class="{ window_label: true, room_label_focus: roomLabel.window }"
+          @click="chooseWindow"
+        >
+          窗户
         </div>
       </div>
       <div class="trip_other_container">
@@ -52,7 +177,7 @@
         <div class="pay_title">付款方式：</div>
       </div>
       <div class="pay_select_container">
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="payWay" placeholder="请选择">
           <el-option
             v-for="item in payWays"
             :key="item.value"
@@ -84,8 +209,95 @@
           <div class="info_desc_bottom">中国政府要求所有旅行者提供此信息。</div>
         </div>
         <div class="info_desc_btn_container">
-          <button class="info_desc_btn">添加</button>
+          <button class="info_desc_btn" @click="chooseInfo">添加</button>
         </div>
+        <el-dialog
+          :visible.sync="infoPickerVisible"
+          width="568px"
+          @close="closeRoomerDialogue"
+        >
+          <div class="roomer_info_container">
+            <div class="roomer_info_title_container">
+              <div class="roomer_info">添加房客信息</div>
+            </div>
+            <div style="margin-top: 25px; margin-bottom: 0px">
+              <div class="separation"></div>
+            </div>
+            <el-form :model="roomerForm" :rules="roomerRules" ref="roomerForm">
+              <div class="roomer_info_tips_container">
+                <div class="roomer_info_tips_top">
+                  根据有关部门规定，所有在中国预订住宿的旅客都必须提供以下信息。作为中国居民，您的信息将由我们存储并处理。完成本次预订，您同意我们向中国政府披露您的信息而不向您提供进一步通知。
+                </div>
+                <div class="roomer_info_tips_bottom">
+                  您所填的信息将不会与房东分享。房客信息将由我们妥善保管，以便下次预订时使用。
+                </div>
+              </div>
+              <div class="roomer_info_choice_container">
+                <div class="rommer_info_choice_title">您的信息</div>
+                <div class="roomer_name_container">
+                  <el-form-item prop="roomerName">
+                    <el-input
+                      v-model="roomerForm.roomerName"
+                      placeholder="姓名"
+                    ></el-input>
+                  </el-form-item>
+                  <div
+                    style="
+                      font-size: 0.7rem;
+                      font-weight: normal;
+                      margin-top: 4px;
+                      color: rgb(113, 113, 113);
+                    "
+                  >
+                    请确保与政府签发的身份证件上的姓名一致。
+                  </div>
+                </div>
+                <div class="roomer_country_container">
+                  <el-form-item prop="country">
+                    <el-select
+                      v-model="roomerForm.country"
+                      placeholder="国家/地区"
+                    >
+                      <el-option value="中国"> </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="roomer_idc_type_container">
+                  <el-form-item prop="idcType">
+                    <el-select
+                      v-model="roomerForm.idcType"
+                      placeholder="身份证件类型"
+                    >
+                      <el-option value="身份证"> </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="roomer_idc_container">
+                  <el-form-item prop="roomerIdCard">
+                    <el-input
+                      v-model="roomerForm.roomerIdCard"
+                      placeholder="身份证件号码"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </div>
+              <div style="margin-top: 25px; margin-bottom: 0px">
+                <div class="separation"></div>
+              </div>
+              <el-form-item>
+                <div class="roomer_save_btn_container">
+                  <el-button
+                    type="primary"
+                    class="roomer_save_btn"
+                    @click="submitRoomerForm('roomerForm')"
+                  >
+                    保存
+                  </el-button>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-dialog>
       </div>
     </div>
     <div style="margin-top: 40px; margin-bottom: 0px; width: 82%">
@@ -150,8 +362,136 @@ export default {
           icon: require("../../../assets/img/weixin-pay.svg"),
         },
       ],
-      value: "",
+      payWay: "",
+      date: "",
+      roomerForm: {
+        country: "中国",
+        idcType: "身份证",
+        roomerName: "",
+        roomerIdCard: "",
+      },
+      roomerRules: {
+        roomerName: [{ required: true, message: "此栏为必填项" }],
+        roomerIdCard: [{ required: true, message: "此栏为必填项" }],
+      },
+      datePickerVisible: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        },
+      },
+      numPickerVisible: false,
+      infoPickerVisible: false,
+      numForm: {
+        adultNum: 1,
+        childrenNum: 0,
+        babeNum: 0,
+        totalNum: 1,
+      },
+      roomLabel: {
+        bigBed: false,
+        bath: false,
+        con: false,
+        wifi: false,
+        window: false,
+      },
     };
+  },
+  methods: {
+    numCancel() {
+      let _this = this;
+      _this.numPickerVisible = false;
+    },
+    numSave() {
+      let _this = this;
+      _this.numForm.totalNum =
+        _this.numForm.childrenNum +
+        _this.numForm.babeNum +
+        _this.numForm.adultNum;
+      _this.numPickerVisible = false;
+    },
+    chooseDate() {
+      let _this = this;
+      _this.datePickerVisible = true;
+    },
+    chooseNum() {
+      let _this = this;
+      _this.numPickerVisible = true;
+    },
+    chooseInfo() {
+      let _this = this;
+      _this.infoPickerVisible = true;
+    },
+    submitRoomerForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+
+          return false;
+        }
+      });
+    },
+    closeNumDialogue() {
+      this.$refs.numForm.resetFields();
+    },
+    closeRoomerDialogue() {
+      this.$refs.roomerForm.resetFields();
+    },
+    dateChange() {
+      let resDay = this.day.substr(0, this.day.length - 1);
+      this.$emit("sonDateChange", resDay);
+    },
+    chooseBigBed() {
+      let _this = this;
+      _this.roomLabel.bigBed = !_this.roomLabel.bigBed;
+    },
+    chooseBath() {
+      let _this = this;
+      _this.roomLabel.bath = !_this.roomLabel.bath;
+    },
+    chooseCon() {
+      let _this = this;
+      _this.roomLabel.con = !_this.roomLabel.con;
+    },
+    chooseWiFi() {
+      let _this = this;
+      _this.roomLabel.wifi = !_this.roomLabel.wifi;
+    },
+    chooseWindow() {
+      let _this = this;
+      _this.roomLabel.window = !_this.roomLabel.window;
+    },
+  },
+  computed: {
+    day: function () {
+      let res = "选择日期";
+      let dateArr = Array.from(this.date);
+      if (dateArr.length !== 0) {
+        let startDate = Date.parse(dateArr[0]);
+        let endDate = Date.parse(dateArr[1]);
+        res = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+        res += "晚";
+      }
+      return res;
+    },
+    startDate: function () {
+      let res = "入住日期";
+      let dateArr = Array.from(this.date);
+      if (dateArr.length !== 0) {
+        res = dateArr[0].substr(5);
+      }
+      return res;
+    },
+    endDate: function () {
+      let res = "退房日期";
+      let dateArr = Array.from(this.date);
+      if (dateArr.length !== 0) {
+        res = dateArr[1].substr(5);
+      }
+      return res;
+    },
   },
 };
 </script>
@@ -354,12 +694,182 @@ export default {
   border-radius: 8px;
   cursor: pointer;
 }
+/* 对话框 */
+/* num */
+.num_picker_title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #484848;
+}
+.num_container {
+  margin-top: 20px;
+}
+.adult_container,
+.children_container,
+.babe_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.adult,
+.children_text_top,
+.babe_text_top {
+  font-size: 1rem;
+  color: #484848;
+  font-weight: bold;
+}
+.children_text_bottom,
+.babe_text_bottom {
+  margin-top: 10px;
+}
+.num_btn_container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.num_cancel_btn {
+  color: rgb(34, 34, 34);
+  font-size: 1rem;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.num_cancel_btn:active {
+  color: rgb(113, 113, 113);
+}
+.num_save_btn {
+  padding: 14px 24px;
+  border-radius: 8px;
+  background: rgb(34, 34, 34);
+  color: rgb(255, 255, 255);
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease 0s, transform 0.1s ease 0s;
+}
+.num_save_btn:active {
+  transform: scale(0.95, 0.95);
+}
+/* room type */
+.room_label_container {
+  display: flex;
+  margin-top: 20px;
+}
+.bigBed_label,
+.con_label,
+.wifi_label,
+.window_label,
+.bath_label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 15px;
+  padding: 6.4px 9.8px;
+  background-color: rgb(243, 243, 243);
+  margin-right: 10px;
+}
+.bigBed_label:hover,
+.con_label:hover,
+.wifi_label:hover,
+.window_label:hover,
+.bath_label:hover {
+  cursor: pointer;
+}
+.room_label_focus {
+  background-color: rgb(234, 247, 234);
+  color: rgb(42, 110, 0);
+}
+/* roomer */
+.roomer_info_container {
+  color: #484848;
+}
+.roomer_info_title_container {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgb(34, 34, 34);
+}
+.roomer_info_tips_container {
+  font-size: 1rem;
+}
+.roomer_info_tips_container {
+  margin-top: 20px;
+}
+.roomer_info_tips_bottom {
+  margin-top: 20px;
+}
+.roomer_info_choice_container {
+  margin-top: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.roomer_name_container,
+.roomer_country_container,
+.roomer_idc_type_container,
+.roomer_idc_container {
+  margin-top: 20px;
+}
+.roomer_name_container ::v-deep .el-input__inner,
+.roomer_idc_container ::v-deep .el-input__inner,
+.roomer_country_container ::v-deep .el-input__inner,
+.roomer_idc_type_container ::v-deep .el-input__inner {
+  height: 56px !important;
+  border-radius: 10px !important;
+}
+.el-select-dropdown__item {
+  line-height: 56px !important;
+}
+.roomer_save_btn_container {
+  margin-top: 20px;
+  width: 100%;
+}
+.roomer_save_btn_container ::v-deep .el-button--primary {
+  background-color: rgb(34, 34, 34) !important;
+}
+.roomer_save_btn_container ::v-deep .el-button--primary:active {
+  background-color: rgb(34, 34, 34) !important;
+}
+.roomer_save_btn_container ::v-deep .el-button--primary:hover {
+  background-color: rgb(34, 34, 34) !important;
+}
+.roomer_save_btn {
+  width: 100%;
+  padding: 14px 24px !important;
+  border-radius: 8px;
+  background: rgb(34, 34, 34);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+}
+.roomer_save_btn:active {
+  transform: scale(0.95, 0.95);
+  transition: transform ease 0.4s;
+}
+/* 日期 */
+.date_picker_container {
+  width: 100%;
+}
+.picker_container {
+  width: 100%;
+  margin-top: 20px;
+}
+.nignt {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: rgb(34, 34, 34);
+}
 /* 魔改element ui */
 .el-select {
   width: 100%;
   height: 56px !important;
 }
-::v-deep .el-input__inner {
+.el-select::v-deep .el-input__inner {
   height: 56px !important;
   border-radius: 8px !important;
 }

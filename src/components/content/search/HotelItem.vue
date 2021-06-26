@@ -1,5 +1,5 @@
 <template>
-  <div class="hotel_item_container">
+  <div class="hotel_item_container" @click="goHouseDetail">
     <div class="img_container">
       <span class="collection_btn_container" @click="collectHouse"
         ><svg
@@ -87,6 +87,9 @@ export default {
     collectHouse() {
       let _this = this;
       _this.isCollected = !_this.isCollected;
+    },
+    goHouseDetail() {
+      this.$router.push("/house");
     },
   },
 };
