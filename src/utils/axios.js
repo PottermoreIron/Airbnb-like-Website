@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8";
+const BASE_URL = "/api";
 export const request = createBaseInstance();
 
 function createBaseInstance() {
