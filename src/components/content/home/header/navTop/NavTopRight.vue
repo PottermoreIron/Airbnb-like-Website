@@ -14,11 +14,9 @@ export default {
   },
   methods: {
     userRegister() {
-      console.log("user Register");
       this.$emit("rShow");
     },
     userLogin() {
-      console.log("user Login");
       this.$emit("lShow");
     },
   },

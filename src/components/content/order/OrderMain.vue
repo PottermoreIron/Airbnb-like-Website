@@ -132,7 +132,10 @@
       </div>
       <div class="room_label_container">
         <div
-          :class="{ bigBed_label: true, room_label_focus: roomLabel.bigBed }"
+          :class="{
+            bigBed_label: true,
+            room_label_focus: roomLabel.bigBed == 2,
+          }"
           @click="chooseBigBed"
         >
           大床房
@@ -445,7 +448,11 @@ export default {
     },
     chooseBigBed() {
       let _this = this;
-      _this.roomLabel.bigBed = !_this.roomLabel.bigBed;
+      if (_this.roomLabel.bigBed == 1) {
+        _this.roomLabel.bigBed = 2;
+      } else {
+        _this.roomLabel.bigBed = 1;
+      }
     },
     chooseBath() {
       let _this = this;

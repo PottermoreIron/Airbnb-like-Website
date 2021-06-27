@@ -271,43 +271,47 @@ export default {
     },
     rSubmitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        const { status, data, message } = await userRegister({
+        const { status, data } = await userRegister({
           idCard: 11,
           password: this.rForm.password,
           userName: this.rForm.name,
           userPhone: this.rForm.phone,
         });
-        console.log(data);
-        console.log(message);
         if (valid && status) {
           this.$message({
             message: "注册成功",
             type: "success",
           });
           this.formShow = false;
+          //   调用actions,函数里没有办法用辅助函数
+          this.$store.dispatch("user/registerUser", data);
+
           this.closeDialogue();
-        } else if (valid == true) {
+        } else if (valid) {
           this.$message({ message: "手机号已被注册", type: "error" });
         } else {
           return false;
         }
       });
     },
+
     lSubmitForm(formName) {
       // 检查密码与电话
       this.$refs[formName].validate(async (valid) => {
-        if (valid) {
+        const { status, data } = await userLogin({
+          password: this.lForm.password,
+          userPhone: this.lForm.phone,
+        });
+        if (status && valid) {
           this.$message({
             message: "登录成功",
             type: "success",
           });
-          const { status, data } = await userLogin({
-            password: this.lForm.password,
-            userPhone: this.lForm.phone,
-          });
-          console.log(status, data);
+          this.$store.dispatch("user/loginUser", data);
           this.formShow = false;
           this.closeDialogue();
+        } else if (valid) {
+          this.$message({ message: "密码或手机号码错误", type: "error" });
         } else {
           console.log("error submit!!");
           return false;
@@ -319,10 +323,8 @@ export default {
     },
     closeDialogue() {
       if (this.op == 1) {
-        console.log("清除register");
         this.$refs.rForm.resetFields();
       } else if (this.op == 2) {
-        console.log("清除登录");
         this.$refs.lForm.resetFields();
       }
     },
