@@ -3,7 +3,7 @@
     <div class="per_nav_top_bar">
       <div class="per_nav_select_out">
         <el-button type="text" class="per_nav_select_in" @click="goToMain"
-          ><b>首页</b></el-button
+          ><b>首页{{ user }}</b></el-button
         >
       </div>
       <el-divider direction="vertical" content-position="center"></el-divider>
@@ -63,6 +63,7 @@
 import CollapseTransition from "element-ui/lib/transitions/collapse-transition";
 import Vue from "vue";
 import bus from "@/utils/bus.js";
+import { mapGetters } from "vuex";
 export default {
   name: "PerNavTop",
   data() {
@@ -77,6 +78,9 @@ export default {
       this.imageUrl = data;
       console.log(this.imageUrl);
     });
+  },
+  computed: {
+    ...mapGetters("user", { user: "user" }),
   },
   methods: {
     mouseLeave1() {
@@ -110,7 +114,20 @@ export default {
     //登出
     logout() {},
     //注销
-    cancellation() {},
+    cancellation() {
+      this.$axios
+        .get("/userManager/getUserById", {
+          params: {
+            id: this.id,
+          },
+        })
+        .then((res) => {
+          this.user = res.data.data;
+          console.log(this.user);
+          this.$refs.inforCard.updateTable();
+          this.emitUser();
+        });
+    },
   },
 };
 </script>

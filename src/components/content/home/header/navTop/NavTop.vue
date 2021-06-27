@@ -285,7 +285,6 @@ export default {
           this.formShow = false;
           //   调用actions,函数里没有办法用辅助函数
           this.$store.dispatch("user/registerUser", data);
-
           this.closeDialogue();
         } else if (valid) {
           this.$message({ message: "手机号已被注册", type: "error" });
