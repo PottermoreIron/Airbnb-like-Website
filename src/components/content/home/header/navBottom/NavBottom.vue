@@ -134,7 +134,7 @@ export default {
   name: "NavBottom",
   data() {
     return {
-      period: "",
+      period: [],
       site: "",
       showSuggestion: false,
       pickerOptions: {
@@ -146,7 +146,7 @@ export default {
   },
   methods: {
     change() {
-      console.log(this.period);
+      this.$store.commit("order/chooseDate", this.period);
     },
     // 事件委托
     clickSuggestion(event) {

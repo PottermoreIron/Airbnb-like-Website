@@ -5,7 +5,9 @@
       @rShow="rShowForm"
       @lShow="lShowForm"
       :style="{ color: textColor }"
+      v-if="uId == ''"
     />
+    <unav-top-right v-else />
     <el-dialog
       :visible.sync="formShow"
       :modal-append-to-body="false"
@@ -156,9 +158,11 @@ import NavTopLeft from "./NavTopLeft.vue";
 import NavTopRight from "./NavTopRight.vue";
 import { userLogin } from "@/api/user.js";
 import { userRegister } from "@/api/user.js";
+import UnavTopRight from "./UnavTopRight.vue";
+import { mapState } from "vuex";
 
 export default {
-  components: { NavTopLeft, NavTopRight },
+  components: { NavTopLeft, NavTopRight, UnavTopRight },
   props: {
     textColor: { type: String, default: "white" },
     showLeft: { type: Boolean, default: true },
@@ -284,12 +288,8 @@ export default {
           });
           this.formShow = false;
           //   调用actions,函数里没有办法用辅助函数
-<<<<<<< HEAD
           //   this.$store.dispatch("user/registerUser", data);
           this.$store.commit("user/registerUser", data);
-=======
-          this.$store.dispatch("user/registerUser", data);
->>>>>>> 3953f3aad52a87c4f82baf0dabc914ac9966fb6f
           this.closeDialogue();
         } else if (valid) {
           this.$message({ message: "手机号已被注册", type: "error" });
@@ -334,6 +334,9 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapState("user", ["uId"]),
+  },
 };
 </script>
 
@@ -344,6 +347,7 @@ export default {
   display: flex;
   justify-content: space-between !important;
   color: blue;
+  align-items: center;
 }
 .nav_top_left {
   margin-left: 5%;

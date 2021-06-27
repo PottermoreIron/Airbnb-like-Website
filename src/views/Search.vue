@@ -9,11 +9,66 @@
         <div class="label">
           <button class="label_btn">日期</button>
         </div>
-        <div class="label"><button class="label_btn">智能排序</button></div>
-        <div class="label"><button class="label_btn">价格</button></div>
-        <div class="label"><button class="label_btn">评分</button></div>
-        <div class="label"><button class="label_btn">距离</button></div>
-        <div class="label"><button class="label_btn">订单量</button></div>
+        <div class="label">
+          <button
+            type="button"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: hotelLabel.smartSort,
+            }"
+            @click="chooseSmart"
+          >
+            智能排序
+          </button>
+        </div>
+        <div class="label">
+          <button
+            type="button"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: hotelLabel.price,
+            }"
+            @click="choosePrice"
+          >
+            价格
+          </button>
+        </div>
+        <div class="label">
+          <button
+            type="button"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: hotelLabel.rating,
+            }"
+            @click="chooseRating"
+          >
+            评分
+          </button>
+        </div>
+        <div class="label">
+          <button
+            type="button"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: hotelLabel.distance,
+            }"
+            @click="chooseDistance"
+          >
+            距离
+          </button>
+        </div>
+        <div class="label">
+          <button
+            type="button"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: hotelLabel.turnover,
+            }"
+            @click="chooseTurnover"
+          >
+            订单量
+          </button>
+        </div>
         <div class="order_label_container">
           <el-select v-model="order" placeholder="排序">
             <el-option value="降序"> </el-option>
@@ -89,6 +144,12 @@ export default {
   data() {
     return {
       order: "",
+      hotelLabel: {
+        smartSort: false,
+        price: false,
+        rating: false,
+        distance: false,
+      },
       roomLabel: {
         bigBed: 1,
         bath: false,
@@ -110,6 +171,48 @@ export default {
       _this.orderPop = false;
       console.log(_this.orderPop);
     },
+    // hotel label
+    chooseSmart() {
+      let _this = this;
+      _this.hotelLabel.smartSort = true;
+      _this.hotelLabel.price = false;
+      _this.hotelLabel.distance = false;
+      _this.hotelLabel.rating = false;
+      _this.hotelLabel.turnover = false;
+    },
+    choosePrice() {
+      let _this = this;
+      _this.hotelLabel.smartSort = false;
+      _this.hotelLabel.price = true;
+      _this.hotelLabel.distance = false;
+      _this.hotelLabel.rating = false;
+      _this.hotelLabel.turnover = false;
+    },
+    chooseRating() {
+      let _this = this;
+      _this.hotelLabel.smartSort = false;
+      _this.hotelLabel.price = false;
+      _this.hotelLabel.distance = false;
+      _this.hotelLabel.rating = true;
+      _this.hotelLabel.turnover = false;
+    },
+    chooseDistance() {
+      let _this = this;
+      _this.hotelLabel.smartSort = false;
+      _this.hotelLabel.price = false;
+      _this.hotelLabel.distance = true;
+      _this.hotelLabel.rating = false;
+      _this.hotelLabel.turnover = false;
+    },
+    chooseTurnover() {
+      let _this = this;
+      _this.hotelLabel.smartSort = false;
+      _this.hotelLabel.price = false;
+      _this.hotelLabel.distance = false;
+      _this.hotelLabel.rating = false;
+      _this.hotelLabel.turnover = true;
+    },
+    // room label
     chooseBigBed() {
       let _this = this;
       if (_this.roomLabel.bigBed == 1) {
@@ -174,11 +277,6 @@ export default {
   background-color: #f2f2f2;
   cursor: pointer;
 }
-.label_btn:focus {
-  background: rgb(0, 132, 137);
-  border: 1px solid rgb(0, 132, 137);
-  color: white;
-}
 .room_label_container {
   display: flex;
   margin-top: 10px;
@@ -201,6 +299,16 @@ export default {
 .window_label:hover,
 .bath_label:hover {
   cursor: pointer;
+}
+.hotel_label_focus {
+  background: rgb(0, 132, 137);
+  border: 1px solid rgb(0, 132, 137);
+  color: white;
+}
+.hotel_label_focus:hover {
+  background: rgb(0, 132, 137);
+  border: 1px solid rgb(0, 132, 137);
+  color: white;
 }
 .room_label_focus {
   background-color: rgb(234, 247, 234);

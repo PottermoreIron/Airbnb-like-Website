@@ -34,7 +34,7 @@ export default {
 }
 .slogan {
   position: absolute;
-  z-index: 9999;
+  z-index: 1;
   left: 10%;
   top: 40%;
   display: flex;

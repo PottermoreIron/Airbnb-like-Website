@@ -23,7 +23,7 @@ module.exports = {
     proxy: {
       "/api": {
         // 由于接口的源与网页的源不一样(端口),所以要设置proxy跨域
-        target: "http://localhost:8081",
+        target: "http://localhost:8080",
         // 后端识别时把/api替换为空,因为接口本身没有prefix
         pathRewrite: {
           "^/api": "",
