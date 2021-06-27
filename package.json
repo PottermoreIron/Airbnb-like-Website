@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.15.2",
     "jquery": "^3.6.0",
+    "nprogress": "^0.2.0",
     "vue": "^2.6.11",
     "vue-airbnb-style-datepicker": "^2.7.1",
     "vue-baidu-map": "^0.21.22",
