@@ -11,5 +11,8 @@ export default {
   uIdCard: "",
   // user pic
   uPic: "",
+  //   user position
+  uLng: "",
+  uLat: "",
   uDelete: false,
 };
