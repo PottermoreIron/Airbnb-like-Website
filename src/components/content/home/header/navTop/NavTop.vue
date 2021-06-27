@@ -284,8 +284,12 @@ export default {
           });
           this.formShow = false;
           //   调用actions,函数里没有办法用辅助函数
+<<<<<<< HEAD
           //   this.$store.dispatch("user/registerUser", data);
           this.$store.commit("user/registerUser", data);
+=======
+          this.$store.dispatch("user/registerUser", data);
+>>>>>>> 3953f3aad52a87c4f82baf0dabc914ac9966fb6f
           this.closeDialogue();
         } else if (valid) {
           this.$message({ message: "手机号已被注册", type: "error" });

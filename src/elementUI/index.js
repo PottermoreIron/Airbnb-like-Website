@@ -26,8 +26,14 @@ import {
   Radio,
   RadioGroup,
   Dialog,
+  Divider,
+  TableColumn,
+  Table,
+  MessageBox,
+  Rate,
   Calendar,
   InputNumber,
+  Upload,
 } from "element-ui";
 
 Vue.use(Button);
@@ -56,5 +62,11 @@ Vue.use(CheckboxGroup);
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Dialog);
+Vue.use(Divider);
+Vue.use(TableColumn);
+Vue.use(Table);
+Vue.prototype.$msgbox = MessageBox;
+Vue.use(Rate);
 Vue.use(Calendar);
 Vue.use(InputNumber);
+Vue.use(Upload);
