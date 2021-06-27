@@ -80,6 +80,8 @@ export default {
           type: "success",
           message: "修改成功！",
         });
+        this.$parent.updateTable();
+        location.reload();
         this.centerDialogVisible = false;
       }); // 发送请求
     },

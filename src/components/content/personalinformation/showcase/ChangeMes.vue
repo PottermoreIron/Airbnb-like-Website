@@ -128,21 +128,24 @@ export default {
           } else {
             if (this.user.userPw == this.corPwd) {
               if (this.changePwd1 == this.changePwd2) {
-                this.$axios.get("/userManager/userUpdate", {
-                  params: {
-                    id: this.$parent.id,
-                    userIdc: this.changeIdCardNumber,
-                    userName: this.changeName,
-                    userPhone: this.changePhoneNumber,
-                    userPw: this.changePwd1,
-                    userPic: this.user.userPic,
-                  },
-                });
-                this.$emit("exitchangebar");
-                this.$message({
-                  message: "修改成功！",
-                  type: "success",
-                });
+                this.$axios
+                  .get("/userManager/userUpdate", {
+                    params: {
+                      id: this.$parent.id,
+                      userIdc: this.changeIdCardNumber,
+                      userName: this.changeName,
+                      userPhone: this.changePhoneNumber,
+                      userPw: this.changePwd1,
+                      userPic: this.user.userPic,
+                    },
+                  })
+                  .then(() => {
+                    this.$emit("exitchangebar");
+                    this.$message({
+                      message: "修改成功！",
+                      type: "success",
+                    });
+                  });
               } else {
                 this.$message({
                   message: "两次密码输入不同！",

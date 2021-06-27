@@ -38,14 +38,30 @@ export default {
       });
   },
   methods: {
+    updateTable() {
+      this.id = this.$parent.id;
+      this.$axios
+        .get("/userManager/getUserById", {
+          params: {
+            id: this.id,
+          },
+        })
+        .then((res) => {
+          this.user = res.data.data;
+          console.log(this.user);
+          this.$refs.inforCard.updateTable();
+          this.emitUser();
+        });
+    },
     emitUser() {
       bus.$emit("emiting", "http://localhost:8080/" + this.user.userPic);
     },
     changMes() {
-      this.changeBar = true;
+      this.changeBar = !this.changeBar;
     },
     exitChangeBar() {
       this.changeBar = false;
+      this.emitUser();
     },
   },
 };

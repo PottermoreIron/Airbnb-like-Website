@@ -30,27 +30,65 @@
           ><b>个人中心</b></el-button
         >
       </div>
-      <img :src="imageUrl" class="per_nav_top_bar_headpic" />
+      <img
+        :src="imageUrl"
+        @mouseover="mouseOver1"
+        @mouseleave="mouseLeave1"
+        class="per_nav_top_bar_headpic"
+      />
+      <el-collapse-transition>
+        <div
+          v-show="vShow"
+          @mouseover="mouseOver1"
+          @mouseleave="mouseLeave1"
+          class="float_div"
+        >
+          <el-button type="warning" class="out_button" round @click="logout"
+            >登出 <i class="el-icon-right"></i
+          ></el-button>
+          <el-button
+            type="danger"
+            class="out_button"
+            round
+            @click="cancellation"
+            >注销 <i class="el-icon-delete"></i
+          ></el-button>
+        </div>
+      </el-collapse-transition>
     </div>
   </div>
 </template>
 
 <script>
+import CollapseTransition from "element-ui/lib/transitions/collapse-transition";
+import Vue from "vue";
 import bus from "@/utils/bus.js";
 export default {
   name: "PerNavTop",
   data() {
     return {
+      vShow: false,
       imageUrl: "",
     };
   },
   created() {
+    Vue.component(CollapseTransition.name, CollapseTransition);
     bus.$on("emiting", (data) => {
       this.imageUrl = data;
       console.log(this.imageUrl);
     });
   },
   methods: {
+    mouseLeave1() {
+      if (this.vShow == true) {
+        this.vShow = false;
+      }
+    },
+    mouseOver1() {
+      if (this.vShow == false) {
+        this.vShow = true;
+      }
+    },
     update() {
       this.imageUrl =
         "http://localhost:8080/" + this.$parent.$refs.perInf.user.userPic;
@@ -69,6 +107,10 @@ export default {
     },
     // 前往主页面
     goToMain() {},
+    //登出
+    logout() {},
+    //注销
+    cancellation() {},
   },
 };
 </script>
@@ -100,8 +142,30 @@ export default {
   height: 35px;
   width: 35px;
   margin: 10px;
-  margin-right: 40px;
+  z-index: 2;
+  margin-left: 50px;
+  margin-right: 70px;
   border-radius: 100%;
   border: 1.75px solid rgb(255, 255, 255);
+}
+.float_div {
+  border: 1px solid rgba(172, 172, 172, 0.418);
+  border-radius: 13px;
+  height: 200px;
+  width: 130px;
+  position: absolute;
+  top: 55px;
+  right: 20px;
+  z-index: 1;
+  text-align: center;
+  line-height: 200px;
+  background-color: rgba(255, 255, 255, 0.486);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.out_button {
+  margin: 15px;
 }
 </style>
