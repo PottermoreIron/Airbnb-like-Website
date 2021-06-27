@@ -30,7 +30,6 @@ export default {
   },
   mounted() {
     this.locations = this.loadLocationsData();
-    console.log(this.locations);
   },
   methods: {
     //  对输入关键词进行建议
