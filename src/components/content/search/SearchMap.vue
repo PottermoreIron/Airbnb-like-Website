@@ -2,7 +2,7 @@
   <div class="search_map">
     <baidu-map
       class="map"
-      center="北京"
+      center="成都"
       :dragging="true"
       :double-click-zoom="true"
       :map-click="true"
@@ -31,7 +31,7 @@ export default {
     return {
       scaleOffset: { width: 10, height: 10 },
       hotels: [
-        { id: 1, loc: { lng: 116.404, lat: 39.915 }, price: 200 },
+        { id: 1, loc: { lng: 104.06, lat: 30.67 }, price: 200 },
         { id: 2, loc: { lng: 118, lat: 39.915 }, price: 300 },
         { id: 3, loc: { lng: 119, lat: 39.915 }, price: 400 },
       ],

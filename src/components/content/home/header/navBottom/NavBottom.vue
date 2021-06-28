@@ -130,6 +130,8 @@
 </template>
 
 <script>
+import { getDefaultHotelList } from "@/api/hotel.js";
+import { mapState } from "vuex";
 export default {
   name: "NavBottom",
   data() {
@@ -165,9 +167,31 @@ export default {
         _this.showSuggestion = false;
       }, 200);
     },
-    goSearchDetail() {
-      this.$router.push("/search");
+    async goSearchDetail() {
+      const { status, data } = await getDefaultHotelList({
+        currentPage: 1,
+        inDay: this.dateOne,
+        order: "asce",
+        outDay: this.dateTwo,
+        pageSize: 10,
+        searchCondition: this.site,
+        typeBath: false,
+        typeBed: 0,
+        typeCd: false,
+        typeWd: false,
+        typeWifi: false,
+        userLat: this.uLat,
+        userLot: this.uLng,
+      });
+      if (status) {
+        this.$store.dispatch("hotels/getDefaultHotels", data);
+        this.$router.push("/search");
+      }
     },
+  },
+  computed: {
+    ...mapState("order", { dateOne: "oStartDate", dateTwo: "oEndDate" }),
+    ...mapState("user", { uLng: "uLng", uLat: "uLat" }),
   },
 };
 </script>

@@ -11,8 +11,8 @@ export default {
   uIdCard: "",
   // user pic
   uPic: "",
-  //   user position
-  uLng: "",
-  uLat: "",
+  //   user position:default Chengdu
+  uLng: "104.06",
+  uLat: "30.67",
   uDelete: false,
 };

@@ -24,7 +24,7 @@
     <div class="other_container">
       <div class="hotel_info_container">
         <div class="hotel_info_title_container">
-          <span class="hotel_info_title">整套公寓型住宅 · 单间1卫1床</span>
+          <span class="hotel_info_title">{{ name }}</span>
         </div>
         <div class="hotel_desc_container">
           <div class="hotel_desc">
@@ -32,7 +32,9 @@
           </div>
         </div>
         <div class="hotel_label_container">
-          <div class="score_container"><span>5.0分 · 316条评论</span></div>
+          <div class="score_container">
+            <span>{{ rating }}分 · {{ sales }}条订单</span>
+          </div>
           <div class="label_container" style="margin-left: 3px">
             <span>超赞房东</span>
           </div>
@@ -52,7 +54,7 @@
         <div class="separation"></div>
       </div>
       <div class="hotel_price_container">
-        <div class="price">￥176</div>
+        <div class="price">￥{{ price }}</div>
         <div class="per">/ 晚</div>
         <div class="discount">
           <svg class="icon" aria-hidden="true">
@@ -70,6 +72,7 @@
 <script>
 export default {
   name: "HotelItem",
+  props: ["price", "rating", "name", "sales"],
   data() {
     return {
       hotelImgs: [
@@ -101,6 +104,7 @@ export default {
   display: flex;
   border: 1px solid #ebebeb;
   border-radius: 3px;
+  margin-top: 20px;
 }
 .hotel_item_container:hover {
   border: 1px solid rgb(235, 235, 235);

@@ -3,7 +3,7 @@
     <el-container>
       <el-header><Header class="header" /></el-header>
       <el-main class="main"><Main /></el-main>
-      <el-footer>Footer{{ user }}</el-footer>
+      <el-footer>Footer{{ sDate + "-" + eDate }}</el-footer>
     </el-container>
   </div>
 </template>
@@ -11,16 +11,16 @@
 <script>
 import Header from "../components/common/Header.vue";
 import Main from "../components/common/Main.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 export default {
   components: { Header, Main },
   data() {
     return {};
   },
   computed: {
-    ...mapGetters(
-      "user",
-      { user: "userName" }
+    ...mapState(
+      "order",
+      { sDate: "oStartDate", eDate: "oEndDate" }
       // ...
     ),
   },

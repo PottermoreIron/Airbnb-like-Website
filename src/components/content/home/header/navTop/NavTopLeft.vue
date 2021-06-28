@@ -6,6 +6,7 @@
       :fetch-suggestions="querySearch"
       placeholder="按城市,地址,地标搜索"
       @select="handleSelect"
+      @keyup.enter.native="searchKeyword"
     >
       <i class="el-icon-search el-input__icon" slot="prefix"> </i>
       <template slot-scope="{ item }">
@@ -20,6 +21,8 @@
 </template>
 
 <script>
+import { getDefaultHotelList } from "@/api/hotel.js";
+import { mapState } from "vuex";
 export default {
   name: "NavBarLeft",
   data() {
@@ -58,12 +61,60 @@ export default {
       ];
     },
     // 处理选中后的事件
-    handleSelect(item) {
-      console.log(item);
+    async handleSelect() {
+      let _this = this;
+      _this.keyWord = "成都";
+      this.$store.commit("search/changeKeyword", _this.keyWord);
+      //   const { status, data } = await getDefaultHotelList({
+      //     currentPage: 1,
+      //     inDay: this.dateOne,
+      //     order: "asce",
+      //     outDay: this.dateTwo,
+      //     pageSize: 3,
+      //     searchCondition: "成都",
+      //     typeBath: false,
+      //     typeBed: 0,
+      //     typeCd: false,
+      //     typeWd: false,
+      //     typeWifi: false,
+      //     userLat: this.uLat,
+      //     userLot: this.uLng,
+      //   });
+      //   if (status) {
+      //     this.$store.dispatch("hotels/getDefaultHotels", data);
+      //     this.$router.push("/search");
+      //   }
     },
     handleIconClick(ev) {
       console.log(ev);
     },
+    // enter键
+    async searchKeyword() {
+      this.$store.commit("search/changeKeyword", this.keyWord);
+      const { status, data } = await getDefaultHotelList({
+        currentPage: 1,
+        inDay: this.dateOne,
+        order: "desc",
+        outDay: this.dateTwo,
+        pageSize: 3,
+        searchCondition: this.keyWord,
+        typeBath: false,
+        typeBed: 0,
+        typeCd: false,
+        typeWd: false,
+        typeWifi: false,
+        userLat: this.uLat,
+        userLot: this.uLng,
+      });
+      if (status) {
+        this.$store.dispatch("hotels/getDefaultHotels", data);
+        this.$router.push("/search");
+      }
+    },
+  },
+  computed: {
+    ...mapState("order", { dateOne: "oStartDate", dateTwo: "oEndDate" }),
+    ...mapState("user", { uLng: "uLng", uLat: "uLat" }),
   },
 };
 </script>

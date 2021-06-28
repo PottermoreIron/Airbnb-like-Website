@@ -1,13 +1,46 @@
 <template>
   <div class="search_container">
-    <div class="navTop"><nav-top textColor="black" /></div>
+    <div class="house_nav">
+      <div class="nav_left_container">
+        <div class="nav_left_input">
+          <el-input
+            prefix-icon="el-icon-search"
+            placeholder="搜索"
+            v-model="keyword"
+            @keyup.enter.native="searchKeyword"
+          ></el-input>
+        </div>
+      </div>
+      <nav-top textColor="black" :showLeft="false" class="nav_top" />
+    </div>
     <div style="margin-top: 20px; margin-bottom: 0px">
       <div class="separation"></div>
     </div>
     <div class="label_container">
       <div class="hotel_label_container">
         <div class="label">
-          <button class="label_btn">日期</button>
+          <button
+            type="text"
+            placeholder="Select dates"
+            id="datepicker-trigger"
+            :class="{
+              label_btn: true,
+              hotel_label_focus: true,
+            }"
+          >
+            <span>{{ formatDates }}</span>
+          </button>
+          <AirbnbStyleDatepicker
+            class="airbnb_date"
+            :trigger-element-id="'datepicker-trigger'"
+            :mode="'range'"
+            :minDate="today"
+            :date-one="dateOne"
+            :date-two="dateTwo"
+            @date-one-selected="changeDateOne"
+            @date-two-selected="changeDateTwo"
+            @closed="closeDataPicker"
+          />
         </div>
         <div class="label">
           <button
@@ -70,9 +103,9 @@
           </button>
         </div>
         <div class="order_label_container">
-          <el-select v-model="order" placeholder="排序">
-            <el-option value="降序"> </el-option>
-            <el-option value="升序"> </el-option>
+          <el-select v-model="order" placeholder="排序" @change="orderChange">
+            <el-option value="desc" label="降序"> </el-option>
+            <el-option value="asce" label="升序"> </el-option>
           </el-select>
         </div>
       </div>
@@ -83,7 +116,7 @@
         <div
           :class="{
             bigBed_label: true,
-            room_label_focus: roomLabel.bigBed == 2,
+            room_label_focus: roomLabel.bigBed == 1,
           }"
           @click="chooseBigBed"
         >
@@ -123,13 +156,29 @@
         <span class="hotel_list_title">300多处住宿</span>
         <div class="hotel_list">
           <div class="hotel_list_item_container">
-            <hotel-item />
+            <hotel-item
+              v-for="hotel in hotels"
+              :key="hotel.hotel.id"
+              :price="hotel.hotel.hotelPrice"
+              :rating="hotel.hotel.hotelStar"
+              :name="hotel.hotel.hotelName"
+              :sales="hotel.hotel.hotelSales"
+            />
           </div>
         </div>
       </div>
       <div class="search_map_container">
         <search-map />
       </div>
+    </div>
+    <div class="pagination_container">
+      <Pagination
+        :current-page.sync="currentPage"
+        :page-size="PAGE_SIZE"
+        :total="total"
+        @current-change="onPageChange"
+        class="pagination"
+      ></Pagination>
     </div>
   </div>
 </template>
@@ -138,104 +187,453 @@
 import NavTop from "../components/content/home/header/navTop/NavTop.vue";
 import HotelItem from "../components/content/search/HotelItem.vue";
 import SearchMap from "../components/content/search/SearchMap.vue";
+import Pagination from "../components/common/Pagination.vue";
+import { mapState } from "vuex";
+// import { getDefaultHotelList } from "@/api/hotel.js";
+import { getLabelHotelList } from "@/api/hotel.js";
+
+const PAGE_SIZE = 5;
 export default {
-  components: { NavTop, HotelItem, SearchMap },
+  components: { NavTop, HotelItem, SearchMap, Pagination },
   name: "Search",
   data() {
     return {
-      order: "",
+      order: "desc",
       hotelLabel: {
-        smartSort: false,
+        smartSort: true,
         price: false,
         rating: false,
         distance: false,
+        label: "",
       },
       roomLabel: {
-        bigBed: 1,
+        bigBed: 0,
         bath: false,
         con: false,
         wifi: false,
         window: false,
       },
+      currentPage: 0,
+      total: 50,
+      today: "",
     };
   },
+  async created() {
+    let _this = this;
+    _this.PAGE_SIZE = PAGE_SIZE;
+    _this.initData();
+    let day = new Date();
+    day.setTime(day.getTime());
+    _this.today =
+      day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+    console.log("fuck");
+    console.log(this.$store.state.search.keyword);
+  },
   methods: {
-    descOrder() {
+    async searchKeyword() {
       let _this = this;
-      _this.orderPop = !_this.orderPop;
-      console.log(_this.orderPop);
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    asceOrder() {
+    async orderChange(val) {
       let _this = this;
-      console.log(_this.orderPop);
-      _this.orderPop = false;
-      console.log(_this.orderPop);
+      _this.order = val;
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
     // hotel label
-    chooseSmart() {
+    async chooseSmart() {
       let _this = this;
       _this.hotelLabel.smartSort = true;
       _this.hotelLabel.price = false;
       _this.hotelLabel.distance = false;
       _this.hotelLabel.rating = false;
       _this.hotelLabel.turnover = false;
+      _this.hotelLabel.label = "smart";
+      _this.order = "desc";
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    choosePrice() {
+    async choosePrice() {
       let _this = this;
       _this.hotelLabel.smartSort = false;
       _this.hotelLabel.price = true;
       _this.hotelLabel.distance = false;
       _this.hotelLabel.rating = false;
       _this.hotelLabel.turnover = false;
+      _this.hotelLabel.label = "price";
+      _this.order = "asce";
+      //   发送请求
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseRating() {
+    async chooseRating() {
       let _this = this;
       _this.hotelLabel.smartSort = false;
       _this.hotelLabel.price = false;
       _this.hotelLabel.distance = false;
       _this.hotelLabel.rating = true;
       _this.hotelLabel.turnover = false;
+      _this.hotelLabel.label = "rating";
+      _this.order = "desc";
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseDistance() {
+    async chooseDistance() {
       let _this = this;
       _this.hotelLabel.smartSort = false;
       _this.hotelLabel.price = false;
       _this.hotelLabel.distance = true;
       _this.hotelLabel.rating = false;
       _this.hotelLabel.turnover = false;
+      _this.hotelLabel.label = "distance";
+      _this.order = "desc";
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseTurnover() {
+    async chooseTurnover() {
       let _this = this;
       _this.hotelLabel.smartSort = false;
       _this.hotelLabel.price = false;
       _this.hotelLabel.distance = false;
       _this.hotelLabel.rating = false;
       _this.hotelLabel.turnover = true;
-    },
-    // room label
-    chooseBigBed() {
-      let _this = this;
-      if (_this.roomLabel.bigBed == 1) {
-        _this.roomLabel.bigBed = 2;
-      } else {
-        _this.roomLabel.bigBed = 1;
+      _this.hotelLabel.label = "turnover";
+      _this.order = "desc";
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
       }
     },
-    chooseBath() {
+    // room label
+    async chooseBigBed() {
+      let _this = this;
+      if (_this.roomLabel.bigBed == 0) {
+        _this.roomLabel.bigBed = 1;
+      } else {
+        _this.roomLabel.bigBed = 0;
+      }
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
+    },
+    async chooseBath() {
       let _this = this;
       _this.roomLabel.bath = !_this.roomLabel.bath;
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseCon() {
+    async chooseCon() {
       let _this = this;
       _this.roomLabel.con = !_this.roomLabel.con;
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseWiFi() {
+    async chooseWiFi() {
       let _this = this;
       _this.roomLabel.wifi = !_this.roomLabel.wifi;
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
     },
-    chooseWindow() {
+    async chooseWindow() {
       let _this = this;
       _this.roomLabel.window = !_this.roomLabel.window;
+      const { status, data } = await getLabelHotelList({
+        currentPage: 1,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: 3,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data);
+        // this.$router.push("/search");
+      }
+    },
+    async onPageChange(page) {
+      this.currentPage = page;
+    },
+    async getHotels() {},
+    async initData() {
+      //   const { status, data } = await getDefaultHotelList({
+      //     currentPage: 1,
+      //     inDay: this.dateOne,
+      //     order: "asce",
+      //     outDay: this.dateTwo,
+      //     pageSize: 3,
+      //     searchCondition: "成都",
+      //     typeBath: false,
+      //     typeBed: 0,
+      //     typeCd: false,
+      //     typeWd: false,
+      //     typeWifi: false,
+      //     userLat: this.uLat,
+      //     userLot: this.uLng,
+      //   });
+      //   if (status) {
+      //     this.$store.dispatch("hotels/getDefaultHotels", data);
+      //     this.$router.push("/search");
+      //   }
+    },
+    closeDataPicker() {
+      this.hotelLabel.dateChosen = true;
+    },
+    // change Date
+    changeDateOne(val) {
+      this.dateOne = val;
+    },
+    changeDateTwo(val) {
+      this.dateTwo = val;
+    },
+  },
+  computed: {
+    dateOne: {
+      get() {
+        return this.$store.state.order.oStartDate;
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateOne", v);
+      },
+    },
+    dateTwo: {
+      get() {
+        return this.$store.state.order.oEndDate;
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateTwo", v);
+      },
+    },
+    formatDates: function () {
+      if (this.dateOne != "" && this.dateTwo != "") {
+        let formatDateOne = this.dateOne.replace(/-/g, "/").substr(5);
+        let formatDateTwo = this.dateTwo.replace(/-/g, "/").substr(5);
+        return formatDateOne + " - " + formatDateTwo;
+      } else {
+        return "日期";
+      }
+    },
+    orderDate: function () {
+      let dateArr = new Array();
+      if (this.dateOne != "" && this.dateTwo != "") {
+        dateArr.push(this.dateOne);
+        dateArr.push(this.dateTwo);
+        console.log(dateArr);
+      }
+      return dateArr;
+    },
+    ...mapState("hotels", { hotels: "hotels" }),
+    ...mapState("user", { uLng: "uLng", uLat: "uLat" }),
+    keyword: {
+      get() {
+        return this.$store.state.search.keyword;
+      },
+      set(v) {
+        this.$store.commit("search/changeKeyword", v);
+      },
     },
   },
 };
@@ -250,7 +648,7 @@ export default {
 }
 /* label */
 .hotel_label_container {
-  width: 60%;
+  width: 70%;
   display: flex;
   margin-top: 10px;
   margin-left: 10px;
@@ -350,5 +748,49 @@ export default {
 .order_label_container ::v-deep .el-input.is-focus,
 .order_label_container ::v-deep .el-input__inner {
   border-color: black !important;
+}
+/* top */
+.house_nav {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav_top {
+  margin-left: 30%;
+}
+/* search 框 */
+.nav_left_container {
+  width: 600px;
+  margin-left: 25px;
+}
+.nav_left_input {
+  width: 460px;
+  height: 48px;
+  border-radius: 4px !important;
+}
+.nav_left_input ::v-deep .el-input__inner {
+  width: 460px;
+  height: 48px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%) !important;
+  transition: all ease 1s;
+}
+.nav_left_input ::v-deep .el-input__inner:hover {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 4px 12px rgb(26 26 29 / 8%) !important;
+  transition: all ease 1s;
+}
+.nav_left_input ::v-deep .el-input__inner:focus {
+  width: 600px;
+  transition: all ease 1s;
+  border-color: black;
+}
+.nav_left_input ::v-deep .el-input__inner::placeholder {
+  color: #757575;
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 </style>

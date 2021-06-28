@@ -5,7 +5,7 @@
       @rShow="rShowForm"
       @lShow="lShowForm"
       :style="{ color: textColor }"
-      v-if="uId == ''"
+      v-if="uId == 0"
     />
     <unav-top-right v-else />
     <el-dialog
