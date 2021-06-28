@@ -2,13 +2,13 @@
   <div class="map">
     <baidu-map
       class="normal_map"
-      center="北京"
+      :center="center"
       :dragging="false"
       :double-click-zoom="false"
       :map-click="false"
     >
       <bm-marker
-        :position="{ lng: 116.404, lat: 39.915 }"
+        :position="{ lat: hotel.hotel.hotelLat, lng: hotel.hotel.hotelLot }"
         animation="BMAP_ANIMATION_BOUNCE"
         :icon="{
           url: require('../../../assets/img/home-fill.svg'),
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import PopoverMap from "./PopoverMap.vue";
 export default {
   components: { PopoverMap },
@@ -49,7 +50,17 @@ export default {
       _this.popoverMapVisible = true;
     },
   },
-  watch: {},
+  computed: {
+    ...mapState("hotel", { hotel: "hotel" }),
+    center: {
+      get() {
+        let res = {};
+        res.lat = this.$store.state.hotel.hotel.hotel.hotelLat;
+        res.lng = this.$store.state.hotel.hotel.hotel.hotelLot;
+        return res;
+      },
+    },
+  },
 };
 </script>
 

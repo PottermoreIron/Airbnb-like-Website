@@ -33,9 +33,7 @@ export default {
   components: { OrderMain, OrderCard, NavTop },
   name: "Order",
   data() {
-    return {
-      day: "1",
-    };
+    return {};
   },
   methods: {
     fatherDateChange(day) {
@@ -43,6 +41,21 @@ export default {
     },
     goBackHouse() {
       this.$router.go(-1);
+    },
+  },
+  computed: {
+    day: {
+      get() {
+        let res = "1";
+        let startDate = this.$store.state.order.oStartDate;
+        let endDate = this.$store.state.order.oEndDate;
+        if (startDate.length != 0 && endDate.length != 0) {
+          startDate = Date.parse(startDate);
+          endDate = Date.parse(endDate);
+          res = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+        }
+        return res;
+      },
     },
   },
 };

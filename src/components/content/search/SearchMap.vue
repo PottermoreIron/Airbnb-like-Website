@@ -8,16 +8,23 @@
       :map-click="true"
     >
       <bm-scale anchor="BMAP_ANCHOR_TOP_LEFT" :offset="scaleOffset"></bm-scale>
+      <bm-geolocation
+        anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+        :showAddressBar="true"
+        :autoLocation="true"
+        locationSuccess="setLoc"
+        locationError="error"
+      ></bm-geolocation>
       <bm-navigation
         anchor="BMAP_ANCHOR_TOP_RIGHT"
         type="BMAP_NAVIGATION_CONTROL_ZOOM"
       ></bm-navigation>
       <bm-label
         v-for="hotel in hotels"
-        :key="hotel.id"
-        :content="hotel.price"
-        :position="hotel.loc"
-        :labelStyle="{ color: 'red', fontSize: '24px' }"
+        :key="hotel.hotel.id"
+        :content="hotel.hotel.hotelPrice"
+        :position="{ lat: hotel.hotel.hotelLat, lng: hotel.hotel.hotelLot }"
+        :labelStyle="{ color: 'black', fontSize: '24px' }"
         title="Hover me"
       />
     </baidu-map>
@@ -25,17 +32,27 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "SearchMap",
   data() {
     return {
       scaleOffset: { width: 10, height: 10 },
-      hotels: [
-        { id: 1, loc: { lng: 104.06, lat: 30.67 }, price: 200 },
-        { id: 2, loc: { lng: 118, lat: 39.915 }, price: 300 },
-        { id: 3, loc: { lng: 119, lat: 39.915 }, price: 400 },
-      ],
     };
+  },
+
+  methods: {
+    setLoc(point, AddressComponent, marker) {
+      console.log(point);
+      console.log(AddressComponent);
+      console.log(marker);
+    },
+    error(StatusCode) {
+      console.log(StatusCode);
+    },
+  },
+  computed: {
+    ...mapState("hotels", { hotels: "hotels" }),
   },
 };
 </script>

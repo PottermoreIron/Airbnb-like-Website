@@ -130,41 +130,6 @@
           </el-form>
         </el-dialog>
       </div>
-      <div class="room_label_container">
-        <div
-          :class="{
-            bigBed_label: true,
-            room_label_focus: roomLabel.bigBed == 2,
-          }"
-          @click="chooseBigBed"
-        >
-          大床房
-        </div>
-        <div
-          :class="{ bath_label: true, room_label_focus: roomLabel.bath }"
-          @click="chooseBath"
-        >
-          淋浴
-        </div>
-        <div
-          :class="{ con_label: true, room_label_focus: roomLabel.con }"
-          @click="chooseCon"
-        >
-          空调
-        </div>
-        <div
-          :class="{ wifi_label: true, room_label_focus: roomLabel.wifi }"
-          @click="chooseWiFi"
-        >
-          WiFi
-        </div>
-        <div
-          :class="{ window_label: true, room_label_focus: roomLabel.window }"
-          @click="chooseWindow"
-        >
-          窗户
-        </div>
-      </div>
       <div class="trip_other_container">
         <div class="other_text_container">
           <div class="other_text_top">请联系房东开具发票</div>
@@ -347,13 +312,15 @@
         </div>
       </div>
       <div class="order_btn_container">
-        <button class="order_btn">确认并支付</button>
+        <button class="order_btn" @click="createUserOrder">确认并支付</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { createOrder } from "@/api/order.js";
+import { mapState } from "vuex";
 export default {
   name: "OrderMain",
   data() {
@@ -366,7 +333,6 @@ export default {
         },
       ],
       payWay: "",
-      date: "",
       roomerForm: {
         country: "中国",
         idcType: "身份证",
@@ -443,41 +409,35 @@ export default {
       this.$refs.roomerForm.resetFields();
     },
     dateChange() {
+      console.log(this.day);
       let resDay = this.day.substr(0, this.day.length - 1);
       this.$emit("sonDateChange", resDay);
     },
-    chooseBigBed() {
+    async createUserOrder() {
       let _this = this;
-      if (_this.roomLabel.bigBed == 1) {
-        _this.roomLabel.bigBed = 2;
-      } else {
-        _this.roomLabel.bigBed = 1;
-      }
-    },
-    chooseBath() {
-      let _this = this;
-      _this.roomLabel.bath = !_this.roomLabel.bath;
-    },
-    chooseCon() {
-      let _this = this;
-      _this.roomLabel.con = !_this.roomLabel.con;
-    },
-    chooseWiFi() {
-      let _this = this;
-      _this.roomLabel.wifi = !_this.roomLabel.wifi;
-    },
-    chooseWindow() {
-      let _this = this;
-      _this.roomLabel.window = !_this.roomLabel.window;
+      const data = await createOrder({
+        enddate: _this.oEdate,
+        rid: _this.rid,
+        startdate: _this.oSdate,
+        uid: 1,
+      });
+      console.log(data.code);
     },
   },
   computed: {
     day: function () {
       let res = "选择日期";
-      let dateArr = Array.from(this.date);
-      if (dateArr.length !== 0) {
-        let startDate = Date.parse(dateArr[0]);
-        let endDate = Date.parse(dateArr[1]);
+
+      //   let dateArr = Array.from(this.date);
+      //   if (dateArr.length !== 0) {
+      //     let startDate = Date.parse(dateArr[0]);
+      //     let endDate = Date.parse(dateArr[1]);
+      //     res = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+      //     res += "晚";
+      //   }
+      if (this.oSdate.length != 0 && this.oEdate.length != 0) {
+        let startDate = Date.parse(this.oSdate);
+        let endDate = Date.parse(this.oEdate);
         res = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
         res += "晚";
       }
@@ -485,20 +445,57 @@ export default {
     },
     startDate: function () {
       let res = "入住日期";
-      let dateArr = Array.from(this.date);
-      if (dateArr.length !== 0) {
-        res = dateArr[0].substr(5);
+      //   let dateArr = Array.from(this.date);
+      //   if (dateArr.length !== 0) {
+      //     res = dateArr[0].substr(5);
+      //   }
+      if (this.oSdate.length != 0) {
+        res = this.oSdate.substr(5);
       }
       return res;
     },
     endDate: function () {
       let res = "退房日期";
-      let dateArr = Array.from(this.date);
-      if (dateArr.length !== 0) {
-        res = dateArr[1].substr(5);
+      //   let dateArr = Array.from(this.date);
+      //   if (dateArr.length !== 0) {
+      //     res = dateArr[1].substr(5);
+      //   }
+      if (this.oEdate.length != 0) {
+        res = this.oEdate.substr(5);
       }
       return res;
     },
+    oSdate: {
+      get() {
+        return this.$store.state.order.oStartDate;
+      },
+      set(v) {
+        this.$store.commit("change/chooseDateOne", v);
+      },
+    },
+    oEdate: {
+      get() {
+        return this.$store.state.order.oEndDate;
+      },
+      set(v) {
+        this.$store.commit("change/chooseDateTwo", v);
+      },
+    },
+    date: {
+      get() {
+        let startDate = this.$store.state.order.oStartDate;
+        let endDate = this.$store.state.order.oEndDate;
+        let res = [];
+        res.push(startDate);
+        res.push(endDate);
+        return Array.from(res);
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateOne", v[0]);
+        this.$store.commit("order/chooseDateTwo", v[1]);
+      },
+    },
+    ...mapState("order", { rid: "oRoomId" }),
   },
 };
 </script>

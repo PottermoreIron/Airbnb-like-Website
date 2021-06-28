@@ -1,11 +1,16 @@
-import { GET_DEFAULT_HOTELS, GET_LABEL_HOTELS } from "./mutation-types";
+import {
+  GET_DEFAULT_HOTELS,
+  GET_LABEL_HOTELS,
+  CHANGE_TOTAL,
+} from "./mutation-types";
 export default {
   [GET_DEFAULT_HOTELS](state, data) {
     state.hotels = data;
-    console.log(state.hotels);
   },
   [GET_LABEL_HOTELS](state, data) {
     state.hotels = data;
-    console.log(state.hotels);
+  },
+  [CHANGE_TOTAL](state, data) {
+    state.total = data;
   },
 };

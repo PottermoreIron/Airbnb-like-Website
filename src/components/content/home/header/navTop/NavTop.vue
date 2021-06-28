@@ -275,24 +275,26 @@ export default {
     },
     rSubmitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        const { status, data } = await userRegister({
-          idCard: 11,
-          password: this.rForm.password,
-          userName: this.rForm.name,
-          userPhone: this.rForm.phone,
-        });
-        if (valid && status) {
-          this.$message({
-            message: "注册成功",
-            type: "success",
+        if (valid) {
+          const { status, data } = await userRegister({
+            idCard: 11,
+            password: this.rForm.password,
+            userName: this.rForm.name,
+            userPhone: this.rForm.phone,
           });
-          this.formShow = false;
-          //   调用actions,函数里没有办法用辅助函数
-          //   this.$store.dispatch("user/registerUser", data);
-          this.$store.commit("user/registerUser", data);
-          this.closeDialogue();
-        } else if (valid) {
-          this.$message({ message: "手机号已被注册", type: "error" });
+          if (status) {
+            this.$message({
+              message: "注册成功",
+              type: "success",
+            });
+            this.formShow = false;
+            //   调用actions,函数里没有办法用辅助函数
+            //   this.$store.dispatch("user/registerUser", data);
+            this.$store.commit("user/registerUser", data);
+            this.closeDialogue();
+          } else {
+            this.$message({ message: "手机号已被注册", type: "error" });
+          }
         } else {
           return false;
         }
@@ -302,21 +304,21 @@ export default {
     lSubmitForm(formName) {
       // 检查密码与电话
       this.$refs[formName].validate(async (valid) => {
-        const { status, data } = await userLogin({
-          password: this.lForm.password,
-          userPhone: this.lForm.phone,
-        });
-        if (status && valid) {
-          this.$message({
-            message: "登录成功",
-            type: "success",
+        if (valid) {
+          const { status, data } = await userLogin({
+            password: this.lForm.password,
+            userPhone: this.lForm.phone,
           });
-          //   this.$store.dispatch("user/loginUser", data);
-          this.$store.commit("user/registerUser", data);
-          this.formShow = false;
-          this.closeDialogue();
-        } else if (valid) {
-          this.$message({ message: "密码或手机号码错误", type: "error" });
+          if (status) {
+            this.$message({
+              message: "登录成功",
+              type: "success",
+            });
+            //   this.$store.dispatch("user/loginUser", data);
+            this.$store.commit("user/registerUser", data);
+            this.formShow = false;
+            this.closeDialogue();
+          }
         } else {
           console.log("error submit!!");
           return false;

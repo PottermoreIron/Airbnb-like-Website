@@ -11,7 +11,7 @@
     >
       <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
       <bm-marker
-        :position="{ lng: 116.404, lat: 39.915 }"
+        :position="{ lng: hotel.hotel.hotelLot, lat: hotel.hotel.hotelLat }"
         animation="BMAP_ANIMATION_BOUNCE"
         :icon="{
           url: require('../../../assets/img/home-fill.svg'),
@@ -29,14 +29,15 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PopoverMap",
   data() {
     return {
-      center: {
-        lat: 39.915,
-        lng: 116.404,
-      },
+      //   center: {
+      //     lat: this.hotel.hotel.hotelLat,
+      //     lng: this.hotel.hotel.hotelLot,
+      //   },
       zoom: 15,
     };
   },
@@ -49,8 +50,25 @@ export default {
     },
     ReturnToOrigin() {
       let _this = this;
-      _this.center.lat = 39.915;
-      _this.center.lng = 116.404;
+      _this.center = {
+        lat: _this.hotel.hotel.hotelLat,
+        lng: _this.hotel.hotel.hotelLot,
+      };
+    },
+  },
+  computed: {
+    ...mapState("hotel", { hotel: "hotel" }),
+    center: {
+      get() {
+        let res = {};
+        res["lat"] = this.$store.state.hotel.hotel.hotel.hotelLat;
+        res["lng"] = this.$store.state.hotel.hotel.hotel.hotelLot;
+        return res;
+      },
+      set(v) {
+        let res = v;
+        return res;
+      },
     },
   },
 };

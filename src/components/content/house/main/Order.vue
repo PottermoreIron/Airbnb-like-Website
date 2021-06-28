@@ -2,7 +2,7 @@
   <div class="order">
     <div class="info_container">
       <div class="price_container">
-        <span class="price">￥300</span
+        <span class="price">￥{{ hotel.hotel.hotelPrice }}</span
         ><span
           style="
             text-decoration: line-through;
@@ -207,7 +207,7 @@
         <div
           :class="{
             bigBed_label: true,
-            room_label_focus: roomLabel.bigBed == 2,
+            room_label_focus: roomLabel.bigBed == 1,
           }"
           @click="chooseBigBed"
         >
@@ -246,6 +246,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { checkOrder } from "@/api/order.js";
 export default {
   name: "Order",
   props: { date: { type: Array, default: () => [] } },
@@ -258,7 +260,7 @@ export default {
         },
       },
       roomLabel: {
-        bigBed: false,
+        bigBed: 0,
         bath: false,
         con: false,
         wifi: false,
@@ -272,6 +274,7 @@ export default {
   created() {
     let _this = this;
     _this.stars = new Array(Number(3)).join(",").split(",");
+    console.log(_this.hotel);
   },
   computed: {
     // 计算属性的 getter
@@ -279,21 +282,42 @@ export default {
       // `this` 指向 vm 实例
       return this.adultNum + this.childrenNum + this.babeNum + "人";
     },
+    ...mapState("hotel", { hotel: "hotel" }),
+    ...mapState("order", { dateOne: "oStartDate", dateTwo: "oEndDate" }),
   },
   methods: {
     sonChangeDate() {
       let dateArr = Array.from(this.date);
       this.$emit("changeDate", dateArr);
     },
-    goFormDetail() {
-      this.$router.push("/order");
+    async goFormDetail() {
+      let _this = this;
+      const { status, data } = await checkOrder({
+        bath: _this.roomLabel.bath,
+        bed: _this.roomLabel.bigBed,
+        cd: _this.roomLabel.con,
+        wd: _this.roomLabel.window,
+        wifi: _this.roomLabel.wifi,
+        start: _this.dateOne,
+        end: _this.dateTwo,
+        hid: _this.hotel.hotel.id,
+      });
+      if (status == false) {
+        this.$message({
+          message: "没有满足要求的房间！请修改日期或标签",
+          type: "erroe",
+        });
+      } else if (status == true) {
+        this.$store.commit("order/chooseRoomId", data.id);
+        this.$router.push("/order");
+      }
     },
     chooseBigBed() {
       let _this = this;
-      if (_this.roomLabel.bigBed == 1) {
-        _this.roomLabel.bigBed = 2;
-      } else {
+      if (_this.roomLabel.bigBed == 0) {
         _this.roomLabel.bigBed = 1;
+      } else {
+        _this.roomLabel.bigBed = 0;
       }
     },
     chooseBath() {

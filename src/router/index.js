@@ -22,6 +22,7 @@ const routes = [
     name: "PersonalInformation",
     component: PersonalInformation,
   },
+
   {
     path: "/house",
     name: "House",

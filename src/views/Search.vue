@@ -1,5 +1,5 @@
 <template>
-  <div class="search_container">
+  <div class="search_container" ref="hotelList">
     <div class="house_nav">
       <div class="nav_left_container">
         <div class="nav_left_input">
@@ -153,7 +153,7 @@
     </div>
     <div class="main_container">
       <div class="hotel_list_container">
-        <span class="hotel_list_title">300多处住宿</span>
+        <span class="hotel_list_title">{{ total }}处住宿</span>
         <div class="hotel_list">
           <div class="hotel_list_item_container">
             <hotel-item
@@ -162,7 +162,10 @@
               :price="hotel.hotel.hotelPrice"
               :rating="hotel.hotel.hotelStar"
               :name="hotel.hotel.hotelName"
-              :sales="hotel.hotel.hotelSales"
+              :comment="hotel.purchaseNum"
+              :description="hotel.hotel.hotelWord"
+              :hotelImgs="hotel.pics"
+              @click.native="goHouseDetail(hotel)"
             />
           </div>
         </div>
@@ -180,6 +183,7 @@
         class="pagination"
       ></Pagination>
     </div>
+    <div class="space_occupy"></div>
   </div>
 </template>
 
@@ -189,7 +193,7 @@ import HotelItem from "../components/content/search/HotelItem.vue";
 import SearchMap from "../components/content/search/SearchMap.vue";
 import Pagination from "../components/common/Pagination.vue";
 import { mapState } from "vuex";
-// import { getDefaultHotelList } from "@/api/hotel.js";
+import { scrollInto } from "@/utils/dom.js";
 import { getLabelHotelList } from "@/api/hotel.js";
 
 const PAGE_SIZE = 5;
@@ -213,8 +217,7 @@ export default {
         wifi: false,
         window: false,
       },
-      currentPage: 0,
-      total: 50,
+      currentPage: 1,
       today: "",
     };
   },
@@ -226,18 +229,17 @@ export default {
     day.setTime(day.getTime());
     _this.today =
       day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
-    console.log("fuck");
-    console.log(this.$store.state.search.keyword);
   },
   methods: {
     async searchKeyword() {
       let _this = this;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -249,19 +251,21 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async orderChange(val) {
       let _this = this;
       _this.order = val;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -273,7 +277,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -287,12 +292,13 @@ export default {
       _this.hotelLabel.turnover = false;
       _this.hotelLabel.label = "smart";
       _this.order = "desc";
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -304,7 +310,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -317,13 +324,14 @@ export default {
       _this.hotelLabel.turnover = false;
       _this.hotelLabel.label = "price";
       _this.order = "asce";
+      _this.currentPage = 1;
       //   发送请求
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -335,7 +343,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -348,12 +357,13 @@ export default {
       _this.hotelLabel.turnover = false;
       _this.hotelLabel.label = "rating";
       _this.order = "desc";
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -365,7 +375,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -378,12 +389,13 @@ export default {
       _this.hotelLabel.turnover = false;
       _this.hotelLabel.label = "distance";
       _this.order = "desc";
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -395,7 +407,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -408,12 +421,13 @@ export default {
       _this.hotelLabel.turnover = true;
       _this.hotelLabel.label = "turnover";
       _this.order = "desc";
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -425,7 +439,8 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
@@ -437,12 +452,13 @@ export default {
       } else {
         _this.roomLabel.bigBed = 0;
       }
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -454,19 +470,21 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async chooseBath() {
       let _this = this;
       _this.roomLabel.bath = !_this.roomLabel.bath;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -478,19 +496,21 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async chooseCon() {
       let _this = this;
       _this.roomLabel.con = !_this.roomLabel.con;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -502,19 +522,21 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async chooseWiFi() {
       let _this = this;
       _this.roomLabel.wifi = !_this.roomLabel.wifi;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -526,19 +548,21 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async chooseWindow() {
       let _this = this;
       _this.roomLabel.window = !_this.roomLabel.window;
+      _this.currentPage = 1;
       const { status, data } = await getLabelHotelList({
-        currentPage: 1,
+        currentPage: _this.currentPage,
         inDay: _this.dateOne,
         order: _this.order,
         outDay: _this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: _this.keyword,
         standard: _this.hotelLabel.label,
         typeBath: _this.roomLabel.bath,
@@ -550,12 +574,36 @@ export default {
         userLot: _this.uLng,
       });
       if (status) {
-        _this.$store.dispatch("hotels/getLabelHotels", data);
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
         // this.$router.push("/search");
       }
     },
     async onPageChange(page) {
-      this.currentPage = page;
+      let _this = this;
+      _this.currentPage = page;
+      const { status, data } = await getLabelHotelList({
+        currentPage: _this.currentPage,
+        inDay: _this.dateOne,
+        order: _this.order,
+        outDay: _this.dateTwo,
+        pageSize: PAGE_SIZE,
+        searchCondition: _this.keyword,
+        standard: _this.hotelLabel.label,
+        typeBath: _this.roomLabel.bath,
+        typeBed: _this.roomLabel.bigBed,
+        typeCd: _this.roomLabel.con,
+        typeWd: _this.roomLabel.window,
+        typeWifi: _this.roomLabel.wifi,
+        userLat: _this.uLat,
+        userLot: _this.uLng,
+      });
+      if (status) {
+        _this.$store.dispatch("hotels/getLabelHotels", data.hotelAndPurchase);
+        _this.$store.dispatch("hotels/changeTotal", data.total);
+        scrollInto(this.$refs.hotelList);
+        // this.$router.push("/search");
+      }
     },
     async getHotels() {},
     async initData() {
@@ -588,6 +636,10 @@ export default {
     },
     changeDateTwo(val) {
       this.dateTwo = val;
+    },
+    goHouseDetail(item) {
+      this.$store.commit("hotel/changeHotel", item);
+      this.$router.push("/house");
     },
   },
   computed: {
@@ -626,6 +678,7 @@ export default {
       return dateArr;
     },
     ...mapState("hotels", { hotels: "hotels" }),
+    ...mapState("hotels", { total: "total" }),
     ...mapState("user", { uLng: "uLng", uLat: "uLat" }),
     keyword: {
       get() {
@@ -792,5 +845,13 @@ export default {
   color: #757575;
   font-size: 1.1rem;
   font-weight: bold;
+}
+/* pagination */
+.pagination_container {
+  margin-top: 25px;
+}
+/* space */
+.space_occupy {
+  height: 30px;
 }
 </style>

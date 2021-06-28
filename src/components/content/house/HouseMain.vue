@@ -30,13 +30,13 @@
       <div class="house_info">
         <div id="detail" class="section house_detail">
           <div class="house_detail_top">
-            <span class="house_detail_sketch">上海市 · 整套公寓</span>
+            <span class="house_detail_sketch">{{ hotel.hotel.hotelName }}</span>
             <div class="house_detail_title">
-              【悠悠小居】南京路步行街／人民广场／外滩／豫园／地铁1/2/8/10号线／温暖静谧干净舒适的休憩小站
+              {{ hotel.hotel.hotelWord }}
             </div>
             <div class="house_detail_label">
               <div class="house_detail_label_container house_score">
-                4.7分 · 69条评论
+                {{ hotel.hotel.hotelStar }}分 · {{ hotel.purchaseNum }}条评论
               </div>
               <div class="house_detail_label_container">自助入住</div>
               <div class="house_detail_label_container">近地铁站</div>
@@ -63,8 +63,7 @@
             <div class="center_bottom_container">
               <span class="deco_tri" />
               <div class="house_desc">
-                位置得天独厚，坐拥上海最繁华闹市区，离地铁1、2、8号线人民广场站仅300米，10号线南京东路站仅500米。南京路步行街、人民广场近在咫尺，外滩、豫园，大世界、上海博物馆仅举步之遥。<br />
-                周围百米内有杏花楼、沈大成、洪长兴等诸多上海特色小吃，咖啡馆、酒吧林立，娱乐购物配套设施齐全。房源所处的正门对面是百年历史老店永安百货，走几十米就是繁华的南京路步行街。房源所处的后门是非常接地气的小吃一条街，网红饮品店、便利店、上海老字号蛋糕店红宝石的奶油小方、掼奶油。
+                {{ hotel.hotel.hotelWord }}
               </div>
               <div class="house_detail_more">
                 <div
@@ -87,8 +86,7 @@
                     <div class="text_desc_container">
                       <div class="text_desc_title">概要</div>
                       <div class="text_desc">
-                        位置得天独厚，坐拥上海最繁华闹市区，离地铁1、2、8号线人民广场站仅300米，10号线南京东路站仅500米。南京路步行街、人民广场近在咫尺，外滩、豫园，大世界、上海博物馆仅举步之遥。<br />
-                        周围百米内有杏花楼、沈大成、洪长兴等诸多上海特色小吃，咖啡馆、酒吧林立，娱乐购物配套设施齐全。房源所处的正门对面是百年历史老店永安百货，走几十米就是繁华的南京路步行街。房源所处的后门是非常接地气的小吃一条街，网红饮品店、便利店、上海老字号蛋糕店红宝石的奶油小方、掼奶油。
+                        {{ hotel.hotel.hotelWord }}
                       </div>
                     </div>
                     <div class="text_detail_container">
@@ -143,7 +141,7 @@
                 <use xlink:href="#icon-star"></use>
               </svg>
             </span>
-            <div class="comment_num">69条评价</div>
+            <div class="comment_num">{{ hotel.purchaseNum }}条评价</div>
           </div>
           <div style="margin-top: 30px; margin-bottom: 0px">
             <div class="separation"></div>
@@ -152,7 +150,7 @@
             <div class="comment_label_container" @click="changeCommentList">
               <div class="comment_totoal">
                 <button class="total_btn comment_btn_focus" id="total_btn">
-                  全部69
+                  全部{{ hotel.purchaseNum }}
                 </button>
               </div>
               <div class="comment_good">
@@ -204,16 +202,8 @@
               :minDate="today"
               :date-one="dateOne"
               :date-two="dateTwo"
-              @date-one-selected="
-                (val) => {
-                  dateOne = val;
-                }
-              "
-              @date-two-selected="
-                (val) => {
-                  dateTwo = val;
-                }
-              "
+              @date-one-selected="changeDateOne"
+              @date-two-selected="changeDateTwo"
             />
           </div>
         </div>
@@ -221,7 +211,7 @@
           <div class="house_location_title">房源位置</div>
           <div class="location">
             <div class="location_title">
-              中国, 北京市, 绿地诺亚方舟悦公馆南区
+              {{ hotel.hotel.hotelAddress }}
             </div>
             <div class="location_desc">
               生活配套： <br />-
@@ -410,6 +400,7 @@ import Comment from "./Comment.vue";
 import Map from "../map/Map.vue";
 import Order from "../house/main/Order.vue";
 import { scrollInto } from "@/utils/dom.js";
+import { mapState } from "vuex";
 // import { getPageOffset } from "@/utils/common.js";
 const PAGE_SIZE = 5;
 export default {
@@ -419,7 +410,7 @@ export default {
     return {
       scroll: "",
       descriptionVisible: false,
-      score: "4",
+      //   score: "4",
       currentPage: 0,
       total: 50,
       comments: [
@@ -466,8 +457,6 @@ export default {
           comment: "一般般,能住,我朋友也这么觉得",
         },
       ],
-      dateOne: "",
-      dateTwo: "",
       value: "",
       today: "",
       housingCodeVisible: false,
@@ -477,16 +466,14 @@ export default {
   },
   async created() {
     let _this = this;
-    _this.stars = new Array(Number(_this.score)).join(",").split(",");
+    let score = _this.hotel.hotel.hotelStar.toFixed(0);
+    _this.stars = new Array(Number(score)).join(",").split(",");
     _this.PAGE_SIZE = PAGE_SIZE;
     _this.initData();
-    let picker = document.getElementById("date_picker");
-    console.log(picker);
     let day = new Date();
     day.setTime(day.getTime());
     _this.today =
       day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
-    console.log(_this.today);
   },
   mounted() {
     //   初始化
@@ -600,6 +587,13 @@ export default {
       _this.dateOne = dateArr[0];
       _this.dateTwo = dateArr[1];
     },
+    // change Date
+    changeDateOne(val) {
+      this.dateOne = val;
+    },
+    changeDateTwo(val) {
+      this.dateTwo = val;
+    },
   },
   watch: {
     //   监听scroll高度,用于锚点样式随页面滑动而改变
@@ -608,6 +602,22 @@ export default {
     },
   },
   computed: {
+    dateOne: {
+      get() {
+        return this.$store.state.order.oStartDate;
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateOne", v);
+      },
+    },
+    dateTwo: {
+      get() {
+        return this.$store.state.order.oEndDate;
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateTwo", v);
+      },
+    },
     formatDates: function () {
       if (this.dateOne != "" && this.dateTwo != "") {
         let formatDateOne = this.dateOne.replace(/-/g, "/").substr(5);
@@ -622,10 +632,10 @@ export default {
       if (this.dateOne != "" && this.dateTwo != "") {
         dateArr.push(this.dateOne);
         dateArr.push(this.dateTwo);
-        console.log(dateArr);
       }
       return dateArr;
     },
+    ...mapState("hotel", { hotel: "hotel" }),
   },
 };
 </script>

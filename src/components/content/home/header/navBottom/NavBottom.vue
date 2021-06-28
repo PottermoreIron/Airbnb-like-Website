@@ -98,7 +98,7 @@
     <div class="site_input">
       <div>
         <el-input
-          v-model="site"
+          v-model="keyword"
           placeholder="输入目的地、城市或景点"
           prefix-icon="el-icon-location"
           @focus="inputFocus"
@@ -114,7 +114,6 @@
         start-placeholder="入住日期"
         end-placeholder="退房日期"
         value-format="yyyy-MM-dd"
-        @change="change"
         popper-class="custom_date_picker"
         :picker-options="pickerOptions"
       >
@@ -132,12 +131,11 @@
 <script>
 import { getDefaultHotelList } from "@/api/hotel.js";
 import { mapState } from "vuex";
+const PAGE_SIZE = 5;
 export default {
   name: "NavBottom",
   data() {
     return {
-      period: [],
-      site: "",
       showSuggestion: false,
       pickerOptions: {
         disabledDate(time) {
@@ -147,14 +145,12 @@ export default {
     };
   },
   methods: {
-    change() {
-      this.$store.commit("order/chooseDate", this.period);
-    },
     // 事件委托
     clickSuggestion(event) {
       // 判断是不是span标签
       if (event.target.nodeName == "SPAN") {
-        this.site = event.target.innerHTML;
+        this.keyword = "成都";
+        this.$store.commit("search/changeKeyword", this.keyword);
       }
       this.showSuggestion = false;
     },
@@ -173,8 +169,8 @@ export default {
         inDay: this.dateOne,
         order: "asce",
         outDay: this.dateTwo,
-        pageSize: 10,
-        searchCondition: this.site,
+        pageSize: PAGE_SIZE,
+        searchCondition: this.keyword,
         typeBath: false,
         typeBed: 0,
         typeCd: false,
@@ -184,12 +180,35 @@ export default {
         userLot: this.uLng,
       });
       if (status) {
-        this.$store.dispatch("hotels/getDefaultHotels", data);
+        this.$store.dispatch("hotels/getDefaultHotels", data.hotelAndPurchase);
+        this.$store.dispatch("hotels/changeTotal", data.total);
         this.$router.push("/search");
       }
     },
   },
   computed: {
+    period: {
+      get() {
+        let startDate = this.$store.state.order.oStartDate;
+        let endDate = this.$store.state.order.oEndDate;
+        let res = [];
+        res.push(startDate);
+        res.push(endDate);
+        return Array.from(res);
+      },
+      set(v) {
+        this.$store.commit("order/chooseDateOne", v[0]);
+        this.$store.commit("order/chooseDateTwo", v[1]);
+      },
+    },
+    keyword: {
+      get() {
+        return this.$store.state.search.keyword;
+      },
+      set(v) {
+        this.$store.commit("search/changeKeyword", v);
+      },
+    },
     ...mapState("order", { dateOne: "oStartDate", dateTwo: "oEndDate" }),
     ...mapState("user", { uLng: "uLng", uLat: "uLat" }),
   },

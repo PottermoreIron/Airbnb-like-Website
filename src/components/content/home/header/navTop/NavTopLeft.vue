@@ -23,6 +23,7 @@
 <script>
 import { getDefaultHotelList } from "@/api/hotel.js";
 import { mapState } from "vuex";
+const PAGE_SIZE = 5;
 export default {
   name: "NavBarLeft",
   data() {
@@ -96,7 +97,7 @@ export default {
         inDay: this.dateOne,
         order: "desc",
         outDay: this.dateTwo,
-        pageSize: 3,
+        pageSize: PAGE_SIZE,
         searchCondition: this.keyWord,
         typeBath: false,
         typeBed: 0,
@@ -107,7 +108,8 @@ export default {
         userLot: this.uLng,
       });
       if (status) {
-        this.$store.dispatch("hotels/getDefaultHotels", data);
+        this.$store.dispatch("hotels/getDefaultHotels", data.hotelAndPurchase);
+        this.$store.dispatch("hotels/changeTotal", data.total);
         this.$router.push("/search");
       }
     },

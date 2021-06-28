@@ -2,6 +2,7 @@ import {
   CHOOSE_DATE,
   CHOOSE_DATE_ONE,
   CHOOSE_DATE_TWO,
+  CHOOSE_ROOM_ID,
 } from "./mutation-types";
 export default {
   [CHOOSE_DATE](state, data) {
@@ -13,5 +14,8 @@ export default {
   },
   [CHOOSE_DATE_TWO](state, data) {
     state.oEndDate = data;
+  },
+  [CHOOSE_ROOM_ID](state, data) {
+    state.oRoomId = data;
   },
 };

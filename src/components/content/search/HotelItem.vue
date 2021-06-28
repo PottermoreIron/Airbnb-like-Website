@@ -1,5 +1,5 @@
 <template>
-  <div class="hotel_item_container" @click="goHouseDetail">
+  <div class="hotel_item_container">
     <div class="img_container">
       <span class="collection_btn_container" @click="collectHouse"
         ><svg
@@ -28,12 +28,12 @@
         </div>
         <div class="hotel_desc_container">
           <div class="hotel_desc">
-            每客消毒【轻奢】超清投影&人民北路地铁站&文殊院&舒适一居室&可住2人
+            {{ description }}
           </div>
         </div>
         <div class="hotel_label_container">
           <div class="score_container">
-            <span>{{ rating }}分 · {{ sales }}条订单</span>
+            <span>{{ rating }}分 · {{ comment }}条评论</span>
           </div>
           <div class="label_container" style="margin-left: 3px">
             <span>超赞房东</span>
@@ -72,17 +72,9 @@
 <script>
 export default {
   name: "HotelItem",
-  props: ["price", "rating", "name", "sales"],
+  props: ["hotelImgs", "price", "rating", "name", "comment", "description"],
   data() {
     return {
-      hotelImgs: [
-        "test_img/search/1.jpg",
-        "test_img/search/2.jpg",
-        "test_img/search/3.jpg",
-        "test_img/search/4.jpg",
-        "test_img/search/5.jpg",
-        "test_img/search/6.jpg",
-      ],
       isCollected: false,
     };
   },
@@ -90,9 +82,6 @@ export default {
     collectHouse() {
       let _this = this;
       _this.isCollected = !_this.isCollected;
-    },
-    goHouseDetail() {
-      this.$router.push("/house");
     },
   },
 };
