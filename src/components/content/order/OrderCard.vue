@@ -6,11 +6,11 @@
       </div>
       <div class="item_desc_container">
         <div class="item_desc_top_container">
-          <div class="item_desc_top">成都的整套公寓型住宅</div>
+          <div class="item_desc_top">{{ hotel.hotel.hotelName }}</div>
         </div>
         <div class="item_desc_center_container">
           <div class="item_desc_center_top">
-            每客消毒【轻奢】超清投影&人民北路地铁站&文殊院&舒适一居室&可住2人
+            {{ hotel.hotel.hotelWord }}
           </div>
           <div class="item_desc_center_bottom">1张床 · 1个卫生间</div>
         </div>
@@ -19,9 +19,11 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-star"></use></svg
             ><span style="color: rgb(34, 34, 34); font-weight: bold"
-              >4.96
+              >{{ hotel.hotel.hotelStar }}
             </span>
-            <span style="color: rgb(113, 113, 113)">(317条评价)</span>
+            <span style="color: rgb(113, 113, 113)"
+              >({{ hotel.purchaseNum }}条评价)</span
+            >
           </div>
         </div>
       </div>
@@ -34,10 +36,10 @@
         <div class="item_price_title">价格详情</div>
       </div>
       <div class="item_price_per_container">
-        <div class="item_price_per">￥258.00 x {{ day }}晚</div>
+        <div class="item_price_per">￥{{ price }} x {{ day }}晚</div>
 
         <div class="item_price_per_num"></div>
-        ￥258.00
+        ￥{{ price }}
       </div>
       <div class="item_price_total_container">
         <div class="item_price_total">总价 (<u>CNY</u>)</div>
@@ -48,14 +50,20 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "OrderCard",
-  props: ["day", "price"],
+  props: ["day"],
   computed: {
     totalPrice: function () {
       let res = this.day * this.price;
       return res.toFixed(2);
     },
+    price: function () {
+      let res = this.$store.state.hotel.hotel.hotel.hotelPrice;
+      return res;
+    },
+    ...mapState("hotel", { hotel: "hotel" }),
   },
 };
 </script>

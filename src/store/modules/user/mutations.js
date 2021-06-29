@@ -1,4 +1,9 @@
-import { REGISTER_USER, LOGIN_USER } from "./mutation-types";
+import {
+  REGISTER_USER,
+  LOGIN_USER,
+  CHANGE_USER_LAT,
+  CHANGE_USER_LNG,
+} from "./mutation-types";
 export default {
   [REGISTER_USER](state, data) {
     state.uId = data.id;
@@ -17,6 +22,11 @@ export default {
     state.uName = data.userName;
     state.uPic = data.userPic;
     state.uDelete = data.userDelete;
-    console.log(state);
+  },
+  [CHANGE_USER_LAT](state, data) {
+    state.uLat = data;
+  },
+  [CHANGE_USER_LNG](state, data) {
+    state.uLng = data;
   },
 };

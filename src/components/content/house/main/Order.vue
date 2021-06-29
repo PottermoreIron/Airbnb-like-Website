@@ -274,7 +274,6 @@ export default {
   created() {
     let _this = this;
     _this.stars = new Array(Number(3)).join(",").split(",");
-    console.log(_this.hotel);
   },
   computed: {
     // 计算属性的 getter
@@ -284,6 +283,7 @@ export default {
     },
     ...mapState("hotel", { hotel: "hotel" }),
     ...mapState("order", { dateOne: "oStartDate", dateTwo: "oEndDate" }),
+    ...mapState("user", { uId: "uId" }),
   },
   methods: {
     sonChangeDate() {
@@ -292,24 +292,31 @@ export default {
     },
     async goFormDetail() {
       let _this = this;
-      const { status, data } = await checkOrder({
-        bath: _this.roomLabel.bath,
-        bed: _this.roomLabel.bigBed,
-        cd: _this.roomLabel.con,
-        wd: _this.roomLabel.window,
-        wifi: _this.roomLabel.wifi,
-        start: _this.dateOne,
-        end: _this.dateTwo,
-        hid: _this.hotel.hotel.id,
-      });
-      if (status == false) {
+      if (_this.uId == 0 || _this.uId == "") {
         this.$message({
-          message: "没有满足要求的房间！请修改日期或标签",
-          type: "erroe",
+          message: "請先登錄！",
+          type: "error",
         });
-      } else if (status == true) {
-        this.$store.commit("order/chooseRoomId", data.id);
-        this.$router.push("/order");
+      } else {
+        const { status, data } = await checkOrder({
+          bath: _this.roomLabel.bath,
+          bed: _this.roomLabel.bigBed,
+          cd: _this.roomLabel.con,
+          wd: _this.roomLabel.window,
+          wifi: _this.roomLabel.wifi,
+          start: _this.dateOne,
+          end: _this.dateTwo,
+          hid: _this.hotel.hotel.id,
+        });
+        if (status == false) {
+          this.$message({
+            message: "没有满足要求的房间！请修改日期或标签",
+            type: "error",
+          });
+        } else if (status == true) {
+          this.$store.commit("order/chooseRoomId", data.id);
+          this.$router.push("/order");
+        }
       }
     },
     chooseBigBed() {

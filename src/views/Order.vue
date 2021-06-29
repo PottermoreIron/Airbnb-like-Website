@@ -19,7 +19,7 @@
         <order-main @sonDateChange="fatherDateChange" />
       </div>
       <div class="order_card_container">
-        <order-card :day="day" :price="258.0" />
+        <order-card :day="day" />
       </div>
     </div>
   </div>

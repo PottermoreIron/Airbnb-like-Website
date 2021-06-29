@@ -411,7 +411,7 @@ export default {
       scroll: "",
       descriptionVisible: false,
       //   score: "4",
-      currentPage: 0,
+      currentPage: 1,
       total: 50,
       comments: [
         {
@@ -635,6 +635,27 @@ export default {
       }
       return dateArr;
     },
+    // comments: function () {
+    //   let tmp = this.$store.state.hotel.hotel.purchaseAndUsers;
+    //   let length = tmp.length;
+    //   let res = [];
+    //   for (let i = 0; i < length; i++) {
+    //     let tmpComment = {};
+    //     tmpComment["id"] = tmp[i].purchase.id;
+    //     tmpComment["name"] = tmp[i].user.userName;
+    //     tmpComment["time"] = tmp[i].purchase.purchaseOver;
+    //     tmpComment["comment"] = tmp[i].purchase.purchaseComment;
+    //     tmpComment["img"] = tmp[i].user.userPic;
+    //     res.push(tmpComment);
+    //   }
+    //   console.log(tmp);
+    //   console.log(tmp[0].purchase.id);
+    //   console.log(tmp[0].purchase.purchaseComment);
+    //   console.log(tmp[0].purchase.purchaseOver);
+    //   console.log(tmp[0].user.userName);
+    //   console.log(tmp[0].user.userPic);
+    //   return tmp;
+    // },
     ...mapState("hotel", { hotel: "hotel" }),
   },
 };

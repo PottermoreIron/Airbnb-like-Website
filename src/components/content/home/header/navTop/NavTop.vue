@@ -47,8 +47,8 @@
               </el-form-item>
             </el-col>
           </el-form-item>
-          <el-form-item prop="email">
-            <el-input v-model="rForm.email" placeholder="邮箱"></el-input>
+          <el-form-item prop="idCard">
+            <el-input v-model="rForm.idCard" placeholder="身份证号"></el-input>
           </el-form-item>
           <el-form-item prop="name">
             <el-input v-model="rForm.name" placeholder="用户名"></el-input>
@@ -220,14 +220,14 @@ export default {
         }
       }
     };
-    // 邮箱验证规则
-    let validEmail = (rule, value, callback) => {
+    // 身份证验证规则
+    let validIdCard = (rule, value, callback) => {
       if (value == "" || value == undefined) {
-        callback(new Error("请输入邮箱"));
+        callback(new Error("请输入身份证号"));
       } else {
-        let reg = /^([a-zA-Z\d])(\w|_)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+        let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
         if (!reg.test(value)) {
-          callback(new Error("邮箱格式错误"));
+          callback(new Error("身份证号格式错误"));
         } else {
           callback();
         }
@@ -242,7 +242,7 @@ export default {
         password: "",
         name: "",
         akPwd: "",
-        email: "",
+        idCard: "",
       },
       lForm: {
         phone: "",
@@ -255,7 +255,7 @@ export default {
         name: [{ validator: validName }],
         password: [{ validator: validPassword }],
         akPwd: [{ validator: validAkPassword }],
-        email: [{ validator: validEmail }],
+        idCard: [{ validator: validIdCard }],
       },
       lRules: {
         region: [{ required: true, message: "选择国家" }],
@@ -277,7 +277,7 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const { status, data } = await userRegister({
-            idCard: 11,
+            idCard: this.rForm.idCard,
             password: this.rForm.password,
             userName: this.rForm.name,
             userPhone: this.rForm.phone,
@@ -318,9 +318,14 @@ export default {
             this.$store.commit("user/registerUser", data);
             this.formShow = false;
             this.closeDialogue();
+          } else {
+            console.log("test");
+            this.$message({
+              message: "密码或电话错误",
+              type: "error",
+            });
           }
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

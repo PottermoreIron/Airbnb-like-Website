@@ -673,7 +673,6 @@ export default {
       if (this.dateOne != "" && this.dateTwo != "") {
         dateArr.push(this.dateOne);
         dateArr.push(this.dateTwo);
-        console.log(dateArr);
       }
       return dateArr;
     },
@@ -711,7 +710,7 @@ export default {
   width: 60%;
   display: flex;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 25px;
 }
 .label {
   margin-left: 13px;

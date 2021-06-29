@@ -396,8 +396,10 @@ export default {
         if (valid) {
           alert("submit!");
         } else {
-          console.log("error submit!!");
-
+          this.$message({
+            message: "信息錯誤",
+            type: "error",
+          });
           return false;
         }
       });
@@ -409,19 +411,29 @@ export default {
       this.$refs.roomerForm.resetFields();
     },
     dateChange() {
-      console.log(this.day);
       let resDay = this.day.substr(0, this.day.length - 1);
       this.$emit("sonDateChange", resDay);
     },
     async createUserOrder() {
       let _this = this;
-      const data = await createOrder({
+      const { status, data } = await createOrder({
         enddate: _this.oEdate,
         rid: _this.rid,
         startdate: _this.oSdate,
         uid: 1,
       });
-      console.log(data.code);
+      if (status == false) {
+        this.$message({
+          message: "无法选择此日期,请重新选择",
+          type: "error",
+        });
+      } else {
+        document.querySelector("body").innerHTML = data;
+        const div = document.createElement("div"); // 创建div
+        div.innerHTML = data; // 将返回的form 放入div
+        document.body.appendChild(div);
+        document.forms[0].submit();
+      }
     },
   },
   computed: {

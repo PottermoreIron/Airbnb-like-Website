@@ -2,26 +2,26 @@
   <div class="house_img_container">
     <div class="main_img_container">
       <img class="zoom_img" src="test_img/house/zoom.jpeg" />
-      <img class="main_img" src="test_img/house/house1.jpeg" />
+      <img class="main_img" :src="hotelImgs[0]" />
     </div>
     <div class="sub_img_container">
       <div class="sub_img_item">
         <img class="zoom_img" src="test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="test_img/house/house2.jpeg" />
+        <img class="sub_img" :src="hotelImgs[1]" />
       </div>
       <div class="sub_img_item">
         <img class="zoom_img" src="test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="test_img/house/house3.jpeg" />
+        <img class="sub_img" :src="hotelImgs[2]" />
       </div>
     </div>
     <div class="sub_img_container">
       <div class="sub_img_item">
         <img class="zoom_img" src="test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="test_img/house/house4.jpeg" />
+        <img class="sub_img" :src="hotelImgs[3]" />
       </div>
       <div class="sub_img_item">
         <img class="zoom_img" src="test_img/house/zoom.jpeg" />
-        <img class="sub_img" src="test_img/house/house5.jpeg" />
+        <img class="sub_img" :src="hotelImgs[4]" />
       </div>
     </div>
     <div class="collection_btn" @click="collectHouse">
@@ -42,6 +42,7 @@
 <script>
 export default {
   name: "HouseImgShow",
+  props: ["hotelImgs"],
   data() {
     return {
       isCollected: true,

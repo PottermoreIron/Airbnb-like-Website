@@ -12,8 +12,8 @@
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
         :showAddressBar="true"
         :autoLocation="true"
-        locationSuccess="setLoc"
-        locationError="error"
+        @locationSuccess="setLoc"
+        @locationError="error"
       ></bm-geolocation>
       <bm-navigation
         anchor="BMAP_ANCHOR_TOP_RIGHT"
@@ -42,13 +42,15 @@ export default {
   },
 
   methods: {
-    setLoc(point, AddressComponent, marker) {
-      console.log(point);
-      console.log(AddressComponent);
-      console.log(marker);
+    setLoc(res) {
+      this.$store.dispatch("user/changeUserLat", res.point.lat);
+      this.$store.dispatch("user/changeUserLng", res.point.lng);
     },
     error(StatusCode) {
-      console.log(StatusCode);
+      this.$message({
+        message: "出错了阿sir," + StatusCode,
+        type: "error",
+      });
     },
   },
   computed: {
