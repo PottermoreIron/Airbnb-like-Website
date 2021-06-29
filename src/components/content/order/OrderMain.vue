@@ -420,7 +420,7 @@ export default {
         enddate: _this.oEdate,
         rid: _this.rid,
         startdate: _this.oSdate,
-        uid: 1,
+        uid: _this.uid,
       });
       if (status == false) {
         this.$message({
@@ -508,6 +508,7 @@ export default {
       },
     },
     ...mapState("order", { rid: "oRoomId" }),
+    ...mapState("user", { uid: "uId" }),
   },
 };
 </script>
