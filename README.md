@@ -7,7 +7,7 @@
 _**Home page**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/home.png)
 
-_**search page*_
+_**search page**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/search.png)
 
 _**detail page**_
