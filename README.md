@@ -1,24 +1,4 @@
 # hotelorder
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## it's a front-end practicing project.
+## I tried my best to create an Airbnb-like website and I have finished the home page, search page, detail page and order page.
