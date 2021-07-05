@@ -4,26 +4,26 @@
 ### I tried my best to create an Airbnb-like website and I have finished the home page, search page, detail page and order page.
 
 
-*Home page*
+_**Home page**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/home.png)
 
-*search page*
+_**search page*_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/search.png)
 
-*detail page*
+_**detail page**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/detail.png)
 
-*datepicker part*
+_**datepicker part**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/date.png)
 
-*comment part*
+_**comment part**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/comment.png)
 
-*map part*
+_**map part**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/map.png)
 
-*tips part*
+_**tips part**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/tips.png)
 
-*order part*
+_**order part**_
 ![image](https://github.com/PottermoreIron/PraticalTraining_HotelSys/blob/master/img/order.png)
